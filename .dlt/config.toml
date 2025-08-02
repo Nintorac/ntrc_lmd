@@ -1,0 +1,30 @@
+[pipeline]
+loader_file_format = "parquet"
+
+# for all sources and resources being extracted
+[extract]
+workers=4
+start_method = "spawn"
+
+[normalize]
+# Limit worker processes to prevent memory contention
+workers = 4
+start_method = "spawn"
+
+[normalize.data_writer]
+# Smaller file size limit for memory management
+#file_max_bytes = 1000  # 50MB chunks
+#file_max_items = 2  # Enable file rotation
+# Optimize for query performance
+#row_group_size = 10000
+
+[sources.data_writer]
+# Control file rotation for ALL sources during extract
+#file_max_items = 1000
+buffer_max_items = 400  # Buffer size affects flush performance
+file_max_bytes = 50000000  # 50MB
+
+[data_writer]
+flavor = "spark"
+#file_max_items = 100
+#file_max_bytes = 1000000  # 50MB
