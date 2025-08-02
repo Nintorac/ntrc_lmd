@@ -1,0 +1,167 @@
+// Lakh MIDI Dataset - Bronze Layer Schema
+// Raw data storage - exact representation of source files
+
+// =============================================================================
+// MIDI FILES - lmd_full.tar.gz
+// =============================================================================
+
+Table raw_midi_files {
+  id bigserial [pk]
+  file_path varchar [not null, unique, note: 'Original path like lmd_full/f/f8b9a90823dd6af25ac67eaf8fef6a43.mid']
+  midi_md5 varchar [not null, note: 'MD5 hash from filename stem']
+  file_content bytea [not null, note: 'Raw MIDI file bytes']
+  file_size_bytes integer [not null]
+  
+  // Audit fields
+  ingested_at timestamp [not null, default: `now()`]
+  source_archive varchar [not null, default: 'lmd_full.tar.gz']
+  
+  indexes {
+    midi_md5 [name: 'idx_raw_midi_md5']
+    file_path [name: 'idx_raw_midi_path']
+  }
+}
+
+// =============================================================================
+// H5 FILES - lmd_matched_h5.tar.gz  
+// =============================================================================
+
+Table raw_h5_files {
+  id bigserial [pk]
+  file_path varchar [not null, unique, note: 'Original path like lmd_matched_h5/L/L/L/TRLLLJH12903CC3D7C.h5']
+  track_id varchar [not null, note: 'Track ID from filename stem']
+  file_content bytea [not null, note: 'Raw H5 file bytes']
+  file_size_bytes integer [not null]
+  
+  // Audit fields
+  ingested_at timestamp [not null, default: `now()`]
+  source_archive varchar [not null, default: 'lmd_matched_h5.tar.gz']
+  
+  indexes {
+    track_id [name: 'idx_raw_h5_track_id']
+    file_path [name: 'idx_raw_h5_path']
+  }
+}
+
+// =============================================================================
+// MATCH SCORES - match_scores.json
+// =============================================================================
+
+Table raw_match_scores {
+  id bigserial [pk]
+  track_id varchar [not null, note: 'Echo Nest track ID']
+  midi_md5 varchar [not null, note: 'MIDI file MD5 hash']
+  match_score float [not null, note: 'Confidence score 0-1']
+  
+  // Audit fields
+  ingested_at timestamp [not null, default: `now()`]
+  source_file varchar [not null, default: 'match_scores.json']
+  
+  indexes {
+    (track_id, midi_md5) [pk, name: 'pk_raw_match_scores']
+    track_id [name: 'idx_raw_match_track_id']
+    midi_md5 [name: 'idx_raw_match_midi_md5']
+  }
+}
+
+// =============================================================================
+// MD5 TO PATHS - md5_to_paths.json
+// =============================================================================
+
+Table raw_md5_paths {
+  id bigserial [pk]
+  midi_md5 varchar [not null, note: 'MIDI file MD5 hash']
+  source_path varchar [not null, note: 'Original scraped file path']
+  path_order integer [not null, note: 'Order in the paths array for this MD5']
+  
+  // Audit fields
+  ingested_at timestamp [not null, default: `now()`]
+  source_file varchar [not null, default: 'md5_to_paths.json']
+  
+  indexes {
+    (midi_md5, path_order) [pk, name: 'pk_raw_md5_paths']
+    midi_md5 [name: 'idx_raw_md5_paths_md5']
+    source_path [name: 'idx_raw_md5_paths_source']
+  }
+}
+
+// =============================================================================
+// H5 EXTRACTED DATA - One table per H5 group
+// =============================================================================
+
+Table h5_analysis {
+  id bigserial [pk]
+  track_id varchar [not null, note: 'Track ID from H5 filename']
+  
+  // Songs data as JSON
+  songs json [note: 'Analysis songs data with audio features']
+  
+  // Time-series arrays
+  bars_start float[] [note: 'Array of bar start times']
+  bars_confidence float[] [note: 'Array of bar confidence scores']
+  beats_start float[] [note: 'Array of beat start times']
+  beats_confidence float[] [note: 'Array of beat confidence scores']
+  sections_start float[] [note: 'Array of section start times']
+  sections_confidence float[] [note: 'Array of section confidence scores']
+  segments_start float[] [note: 'Array of segment start times']
+  segments_confidence float[] [note: 'Array of segment confidence scores']
+  segments_loudness_max float[] [note: 'Array of segment max loudness values']
+  segments_loudness_max_time float[] [note: 'Array of times when max loudness occurs']
+  segments_loudness_start float[] [note: 'Array of segment start loudness values']
+  segments_pitches float[][] [note: 'Array of 12-element pitch vectors per segment']
+  segments_timbre float[][] [note: 'Array of 12-element timbre vectors per segment']
+  tatums_start float[] [note: 'Array of tatum start times']
+  tatums_confidence float[] [note: 'Array of tatum confidence scores']
+  
+  // Audit fields
+  ingested_at timestamp [not null, default: `now()`]
+  source_archive varchar [not null, default: 'lmd_matched_h5.tar.gz']
+  
+  indexes {
+    track_id [name: 'idx_h5_analysis_track_id']
+  }
+}
+
+Table h5_metadata {
+  id bigserial [pk]
+  track_id varchar [not null, note: 'Track ID from H5 filename']
+  
+  // Songs data as JSON
+  songs json [note: 'Metadata songs data with artist/song info']
+  
+  // Artist terms arrays
+  artist_terms varchar[] [note: 'Array of artist terms']
+  artist_terms_freq float[] [note: 'Array of term frequencies']
+  artist_terms_weight float[] [note: 'Array of term weights']
+  
+  // Similar artists array
+  similar_artists varchar[] [note: 'Array of similar artist IDs']
+  
+  // Audit fields
+  ingested_at timestamp [not null, default: `now()`]
+  source_archive varchar [not null, default: 'lmd_matched_h5.tar.gz']
+  
+  indexes {
+    track_id [name: 'idx_h5_metadata_track_id']
+  }
+}
+
+Table h5_musicbrainz {
+  id bigserial [pk]
+  track_id varchar [not null, note: 'Track ID from H5 filename']
+  
+  // Songs data as JSON
+  songs json [note: 'MusicBrainz songs data with year info']
+  
+  // MusicBrainz tags arrays
+  artist_mbtags varchar[] [note: 'Array of MusicBrainz tags']
+  artist_mbtags_count integer[] [note: 'Array of tag counts']
+  
+  // Audit fields
+  ingested_at timestamp [not null, default: `now()`]
+  source_archive varchar [not null, default: 'lmd_matched_h5.tar.gz']
+  
+  indexes {
+    track_id [name: 'idx_h5_musicbrainz_track_id']
+  }
+}
