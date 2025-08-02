@@ -1,0 +1,50 @@
+version: 2
+
+sources:
+  - name: bronze_data
+    description: "Bronze layer data from Lakh MIDI Dataset pipeline"
+    meta:
+      external_location: "data/bronze_data/{name}/*.parquet"
+    tables:
+      - name: raw_midi_files
+        description: "Raw MIDI files extracted from lmd_full.tar.gz"
+        columns:
+          - name: file_path
+            description: "Path to the MIDI file within the tar archive"
+          - name: midi_md5
+            description: "MD5 hash of the MIDI file (extracted from filename)"
+          - name: file_content
+            description: "Binary content of the MIDI file"
+          - name: file_size_bytes
+            description: "Size of the MIDI file in bytes"
+      
+      - name: h5_extract
+        description: "Extracted musicbrainz data from H5 files"
+        columns:
+          - name: track_id
+            description: "Track ID from the H5 filename"
+          - name: file_path
+            description: "Path to the H5 file within the tar archive"
+          - name: file_size_bytes
+            description: "Size of the H5 file in bytes"
+          # Additional columns from H5 extraction will vary based on the H5 file structure
+      
+      - name: raw_match_scores
+        description: "Match scores between tracks and MIDI files"
+        columns:
+          - name: track_id
+            description: "Track ID"
+          - name: midi_md5
+            description: "MD5 hash of the matched MIDI file"
+          - name: match_score
+            description: "Score indicating quality of the match"
+      
+      - name: raw_md5_paths
+        description: "Mapping of MD5 hashes to their source paths"
+        columns:
+          - name: midi_md5
+            description: "MD5 hash of the MIDI file"
+          - name: source_path
+            description: "Original source path of the MIDI file"
+          - name: path_order
+            description: "Order of this path if multiple paths exist for same MD5"
