@@ -26,18 +26,18 @@ Table hub_artist {
   record_source varchar [not null]
 }
 
-Table hub_song {
-  song_hk varchar [pk, note: 'Hash key for song']
-  song_id varchar [not null, unique, note: 'Echo Nest song ID (business key)']
-  load_date timestamp [not null, default: `now()`]
-  record_source varchar [not null]
-}
-
 Table hub_release {
   release_hk varchar [pk, note: 'Hash key for release']
   release_id varchar [not null, unique, note: 'Release identifier (business key)']
   load_date timestamp [not null, default: `now()`]
   record_source varchar [not null]
+}
+
+Table hub_midi_source {
+  source_hk varchar [pk, note: 'Hash key for MIDI source']
+  source_path varchar [not null, unique, note: 'Source path (business key)']
+  load_date timestamp [not null, default: `now()`]
+  record_source varchar [not null, note: 'md5_to_paths.json']
 }
 
 // =============================================================================
@@ -68,18 +68,6 @@ Table link_track_artist {
   }
 }
 
-Table link_track_song {
-  link_track_song_hk varchar [pk]
-  track_hk varchar [not null, ref: > hub_track.track_hk]
-  song_hk varchar [not null, ref: > hub_song.song_hk]
-  load_date timestamp [not null, default: `now()`]
-  record_source varchar [not null]
-  
-  indexes {
-    (track_hk, song_hk) [unique]
-  }
-}
-
 Table link_track_release {
   link_track_release_hk varchar [pk]
   track_hk varchar [not null, ref: > hub_track.track_hk]
@@ -104,13 +92,25 @@ Table link_artist_similar {
   }
 }
 
+Table link_midi_source {
+  link_midi_source_hk varchar [pk, note: 'Hash key for MIDI-source relationship']
+  midi_hk varchar [not null, ref: > hub_midi_file.midi_hk]
+  source_hk varchar [not null, ref: > hub_midi_source.source_hk]
+  load_date timestamp [not null, default: `now()`]
+  record_source varchar [not null, note: 'md5_to_paths.json']
+  
+  indexes {
+    (midi_hk, source_hk) [unique]
+  }
+}
+
 
 // =============================================================================
-// SIMPLIFIED DATA TABLES - Regular tables instead of satellites
+// SATELLITES - Descriptive attributes for hubs
 // =============================================================================
 
-Table track_details {
-  track_hk varchar [pk, ref: - hub_track.track_hk]
+Table sat_track {
+  track_hk varchar [pk, ref: > hub_track.track_hk]
   
   // Audio analysis data
   audio_md5 varchar
@@ -134,6 +134,8 @@ Table track_details {
   genre varchar
   year integer
   analyzer_version varchar
+  song_id varchar [note: 'Echo Nest song ID']
+  song_hotttnesss float
   
   // Index references for time series data
   idx_bars_confidence integer
@@ -154,102 +156,6 @@ Table track_details {
   idx_artist_terms integer
   idx_similar_artists integer
   idx_artist_mbtags integer
-  
-  // Audit fields
-  load_date timestamp [not null, default: `now()`]
-  record_source varchar [not null]
-}
-
-Table artist_details {
-  artist_hk varchar [pk, ref: - hub_artist.artist_hk]
-  
-  artist_name varchar
-  artist_mbid varchar [note: 'MusicBrainz artist ID']
-  artist_familiarity float
-  artist_hotttnesss float
-  artist_latitude float
-  artist_longitude float
-  artist_location varchar
-  artist_7digitalid integer
-  artist_playmeid integer
-  
-  load_date timestamp [not null, default: `now()`]
-  record_source varchar [not null]
-}
-
-Table song_details {
-  song_hk varchar [pk, ref: - hub_song.song_hk]
-  
-  song_hotttnesss float
-  
-  load_date timestamp [not null, default: `now()`]
-  record_source varchar [not null]
-}
-
-Table release_details {
-  release_hk varchar [pk, ref: - hub_release.release_hk]
-  
-  release varchar
-  release_7digitalid integer
-  track_7digitalid integer
-  
-  load_date timestamp [not null, default: `now()`]
-  record_source varchar [not null]
-}
-
-Table midi_file_details {
-  midi_hk varchar [pk, ref: - hub_midi_file.midi_hk]
-  
-  file_content bytea [note: 'Raw MIDI file bytes']
-  file_size integer
-  
-  load_date timestamp [not null, default: `now()`]
-  record_source varchar [not null]
-}
-
-
-// =============================================================================
-// RELATIONSHIP DATA - Simplified satellites become regular tables
-// =============================================================================
-
-Table match_scores {
-  link_track_midi_hk varchar [pk, ref: - link_track_midi.link_track_midi_hk]
-  
-  score float [note: 'Matching confidence score (0-1)']
-  matching_algorithm varchar [note: 'Algorithm used for matching']
-  
-  load_date timestamp [not null, default: `now()`]
-  record_source varchar [not null]
-}
-
-Table artist_similarity_scores {
-  link_artist_similar_hk varchar [pk, ref: - link_artist_similar.link_artist_similar_hk]
-  
-  similarity_rank integer [note: 'Order of similarity (1=most similar)']
-  similarity_score float [note: 'Computed similarity score if available']
-  
-  load_date timestamp [not null, default: `now()`]
-  record_source varchar [not null]
-}
-
-Table midi_source_paths {
-  midi_hk varchar [not null, ref: > hub_midi_file.midi_hk]
-  source_path varchar [not null]
-  
-  load_date timestamp [not null, default: `now()`]
-  record_source varchar [not null, note: 'md5_to_paths.json']
-  
-  indexes {
-    (midi_hk, source_path) [pk]
-  }
-}
-
-// =============================================================================
-// TIME-SERIES DATA - Keep as JSONB for flexibility
-// =============================================================================
-
-Table track_timeseries {
-  track_hk varchar [pk, ref: - hub_track.track_hk]
   
   // Bars analysis
   bars_start float[] [note: 'Array of bar start times']
@@ -276,11 +182,81 @@ Table track_timeseries {
   tatums_start float[] [note: 'Array of tatum start times']
   tatums_confidence float[] [note: 'Array of tatum confidence scores']
   
+  
+  // Audit fields
   load_date timestamp [not null, default: `now()`]
   record_source varchar [not null]
 }
 
-Table artist_terms {
+Table sat_artist {
+  artist_hk varchar [pk, ref: > hub_artist.artist_hk]
+  
+  artist_name varchar
+  artist_mbid varchar [note: 'MusicBrainz artist ID']
+  artist_familiarity float
+  artist_hotttnesss float
+  artist_latitude float
+  artist_longitude float
+  artist_location varchar
+  artist_7digitalid integer
+  artist_playmeid integer
+  
+  load_date timestamp [not null, default: `now()`]
+  record_source varchar [not null]
+}
+
+Table sat_release {
+  release_hk varchar [pk, ref: > hub_release.release_hk]
+  
+  release varchar
+  release_7digitalid integer
+  track_7digitalid integer
+  
+  load_date timestamp [not null, default: `now()`]
+  record_source varchar [not null]
+}
+
+Table sat_midi_file {
+  midi_hk varchar [pk, ref: > hub_midi_file.midi_hk]
+  
+  file_content bytea [note: 'Raw MIDI file bytes']
+  file_size integer
+  
+  load_date timestamp [not null, default: `now()`]
+  record_source varchar [not null]
+}
+
+
+// =============================================================================
+// LINK SATELLITES - Descriptive attributes for links
+// =============================================================================
+
+Table sat_match_scores {
+  link_track_midi_hk varchar [pk, ref: > link_track_midi.link_track_midi_hk]
+  
+  score float [note: 'Matching confidence score (0-1)']
+  matching_algorithm varchar [note: 'Algorithm used for matching']
+  
+  load_date timestamp [not null, default: `now()`]
+  record_source varchar [not null]
+}
+
+Table sat_artist_similarity {
+  link_artist_similar_hk varchar [pk, ref: > link_artist_similar.link_artist_similar_hk]
+  
+  similarity_rank integer [note: 'Order of similarity (1=most similar)']
+  similarity_score float [note: 'Computed similarity score if available']
+  
+  load_date timestamp [not null, default: `now()`]
+  record_source varchar [not null]
+}
+
+
+// =============================================================================
+// MULTI-ACTIVE SATELLITES - Many-to-many descriptive data
+// =============================================================================
+
+Table sat_artist_terms {
   artist_hk varchar [not null, ref: > hub_artist.artist_hk]
   term varchar [not null]
   frequency float
@@ -295,7 +271,7 @@ Table artist_terms {
   }
 }
 
-Table artist_mbtags {
+Table sat_artist_mbtags {
   artist_hk varchar [not null, ref: > hub_artist.artist_hk]
   tag varchar [not null]
   tag_count integer
