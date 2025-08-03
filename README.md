@@ -70,9 +70,30 @@ When artists appear in multiple tracks with similar metadata arrays, we consiste
 
 ## Usage
 
-1. **Build bronze layer**: Load raw Parquet files as dbt sources `python bronze_pipeline.py`
-2. **Build silver layer**: Transform to Data Vault structure with `dbt run`
-3. **Run tests**: Validate data quality with `dbt test`
+### Download and process data
+
+```bash
+make data-build-bronze-download  # Download all raw files
+make data-build-bronze-process   # Process raw files into parquet
+make data-build-silver-static    # Build static models (hubs, links)
+make data-build-silver-incrementals # Build satellites for all partitions
+make data-test-silver           # Run tests
+```
+
+### Complete pipelines
+
+```bash
+make data-build-bronze-all   # Download + process bronze
+make data-build-silver-all   # Build all silver + test
+```
+
+### Partition processing
+
+Incremental models are partitioned by the first character of hash keys:
+
+```bash
+dbt run --select tag:incremental --vars '{"partition_filter": "a"}'
+```
 
 ## Key Design Decisions
 

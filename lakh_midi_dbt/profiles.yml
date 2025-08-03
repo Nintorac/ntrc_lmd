@@ -1,14 +1,14 @@
 lakh_midi_dbt:
   outputs:
-    dev:
+    local:
       type: duckdb
-      path: dev.duckdb
+      path: data/lakh_local.duckdb
       external_root: "data/silver_lakh_midi"
       threads: 1
 
-    prod:
+    remote:
       type: duckdb
-      path: prod.duckdb
+      path: data/lakh_remote.duckdb
       threads: 4
 
-  target: dev
+  target: local

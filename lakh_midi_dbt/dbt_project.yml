@@ -34,6 +34,7 @@ models:
     # Config indicated by + and applies to all files under models/example/
     silver:
       +materialized: external
+      +tags: silver
       hubs:
         +tags: hubs
       links:
