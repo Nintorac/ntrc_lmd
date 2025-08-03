@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: sat_midi_file
+    description: "Satellite containing MIDI file descriptive attributes"
+    
+    columns:
+      - name: midi_hk
+        description: "Hash key of the parent MIDI file hub"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_midi_file')
+              field: midi_hk
+      
+      - name: file_content
+        description: "Raw MIDI file binary content"
+      
+      - name: file_size
+        description: "MIDI file size in bytes"
+      
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      
+      - name: record_source
+        description: "Source system (lmd_full)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['lmd_full']

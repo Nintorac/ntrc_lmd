@@ -8,6 +8,7 @@ WITH artist_terms_unnested AS (
     JOIN {{ source('bronze_data', 'h5_extract') }} h5 ON a.artist_id = h5.metadata.songs.artist_id
     WHERE h5.metadata.artist_terms IS NOT NULL
       AND array_length(h5.metadata.artist_terms, 1) > 0
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY a.artist_hk ORDER BY h5.track_id) = 1
 ),
 
 artist_terms_data AS (

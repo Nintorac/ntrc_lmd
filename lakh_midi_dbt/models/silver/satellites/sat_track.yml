@@ -1,0 +1,190 @@
+version: 2
+
+models:
+  - name: sat_track
+    description: "Satellite containing track descriptive attributes including audio analysis, metadata, and time-series arrays"
+    
+    columns:
+      - name: track_hk
+        description: "Hash key of the parent track hub"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_track')
+              field: track_hk
+      
+      - name: audio_md5
+        description: "MD5 hash of the audio file"
+      
+      - name: title
+        description: "Track title"
+      
+      - name: genre
+        description: "Track genre"
+      
+      - name: year
+        description: "Release year"
+      
+      - name: duration
+        description: "Track duration in seconds"
+      
+      - name: tempo
+        description: "Track tempo in BPM"
+      
+      - name: key
+        description: "Musical key (0-11)"
+      
+      - name: mode
+        description: "Musical mode (0=minor, 1=major)"
+      
+      - name: energy
+        description: "Energy level (0.0-1.0)"
+      
+      - name: danceability
+        description: "Danceability score (0.0-1.0)"
+      
+      - name: loudness
+        description: "Overall loudness in dB"
+      
+      - name: song_id
+        description: "Echo Nest song ID"
+      
+      - name: song_hotttnesss
+        description: "Echo Nest song popularity score"
+      
+      - name: analysis_sample_rate
+        description: "Audio analysis sample rate"
+      
+      - name: end_of_fade_in
+        description: "End time of fade in (seconds)"
+      
+      - name: start_of_fade_out
+        description: "Start time of fade out (seconds)"
+      
+      - name: key_confidence
+        description: "Confidence in key detection (0.0-1.0)"
+      
+      - name: mode_confidence
+        description: "Confidence in mode detection (0.0-1.0)"
+      
+      - name: time_signature
+        description: "Time signature (beats per bar)"
+      
+      - name: time_signature_confidence
+        description: "Confidence in time signature detection (0.0-1.0)"
+      
+      - name: analyzer_version
+        description: "Version of Echo Nest analyzer used"
+      
+      # Index references for time series data
+      - name: idx_bars_confidence
+        description: "Index reference for bars confidence array"
+      
+      - name: idx_bars_start
+        description: "Index reference for bars start array"
+      
+      - name: idx_beats_confidence
+        description: "Index reference for beats confidence array"
+      
+      - name: idx_beats_start
+        description: "Index reference for beats start array"
+      
+      - name: idx_sections_confidence
+        description: "Index reference for sections confidence array"
+      
+      - name: idx_sections_start
+        description: "Index reference for sections start array"
+      
+      - name: idx_segments_confidence
+        description: "Index reference for segments confidence array"
+      
+      - name: idx_segments_loudness_max
+        description: "Index reference for segments max loudness array"
+      
+      - name: idx_segments_loudness_max_time
+        description: "Index reference for segments max loudness time array"
+      
+      - name: idx_segments_loudness_start
+        description: "Index reference for segments start loudness array"
+      
+      - name: idx_segments_pitches
+        description: "Index reference for segments pitches array"
+      
+      - name: idx_segments_start
+        description: "Index reference for segments start array"
+      
+      - name: idx_segments_timbre
+        description: "Index reference for segments timbre array"
+      
+      - name: idx_tatums_confidence
+        description: "Index reference for tatums confidence array"
+      
+      - name: idx_tatums_start
+        description: "Index reference for tatums start array"
+      
+      - name: idx_artist_terms
+        description: "Index reference for artist terms"
+      
+      - name: idx_similar_artists
+        description: "Index reference for similar artists"
+      
+      - name: idx_artist_mbtags
+        description: "Index reference for artist MusicBrainz tags"
+      
+      # Time series arrays
+      - name: bars_start
+        description: "Array of bar start times"
+      
+      - name: bars_confidence
+        description: "Array of bar confidence scores"
+      
+      - name: beats_start
+        description: "Array of beat start times"
+      
+      - name: beats_confidence
+        description: "Array of beat confidence scores"
+      
+      - name: sections_start
+        description: "Array of section start times"
+      
+      - name: sections_confidence
+        description: "Array of section confidence scores"
+      
+      - name: segments_start
+        description: "Array of segment start times"
+      
+      - name: segments_confidence
+        description: "Array of segment confidence scores"
+      
+      - name: segments_loudness_max
+        description: "Array of segment max loudness values"
+      
+      - name: segments_loudness_max_time
+        description: "Array of times when max loudness occurs"
+      
+      - name: segments_loudness_start
+        description: "Array of segment start loudness values"
+      
+      - name: segments_pitches
+        description: "Array of 12-element pitch vectors per segment"
+      
+      - name: segments_timbre
+        description: "Array of 12-element timbre vectors per segment"
+      
+      - name: tatums_start
+        description: "Array of tatum start times"
+      
+      - name: tatums_confidence
+        description: "Array of tatum confidence scores"
+      
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      
+      - name: record_source
+        description: "Source system (lmd_h5)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['lmd_h5']

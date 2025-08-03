@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: sat_artist_similarity
+    description: |
+      Satellite containing similarity attributes for artist-similarity relationships.
+      
+      **Data Handling:** Ranks are based on array position in the original similar_artists 
+      data, preserving the source ordering of similarity importance.
+    
+    columns:
+      - name: link_artist_similar_hk
+        description: "Hash key of the parent artist-similarity link"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('link_artist_similar')
+              field: link_artist_similar_hk
+      
+      - name: similarity_rank
+        description: "Rank of similarity (1=most similar, 2=second most similar, etc.)"
+        tests:
+          - not_null
+      
+      - name: similarity_score
+        description: "Computed similarity score (if available)"
+      
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      
+      - name: record_source
+        description: "Source system (lmd_h5)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['lmd_h5']

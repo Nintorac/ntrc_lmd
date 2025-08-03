@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: sat_artist_terms
+    description: |
+      Multi-active satellite containing artist terms/tags from Echo Nest.
+      Each artist can have multiple terms with frequency and weight scores.
+      
+      **Data Handling:** When an artist appears in multiple tracks, we take the first 
+      occurrence ordered by track_id to ensure consistency and avoid duplicates.
+    
+    columns:
+      - name: artist_hk
+        description: "Hash key of the parent artist hub"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_artist')
+              field: artist_hk
+      
+      - name: term
+        description: "Artist term/tag (genre, style, descriptor)"
+        tests:
+          - not_null
+      
+      - name: frequency
+        description: "Term frequency score (0.0-1.0)"
+      
+      - name: weight
+        description: "Term weight/importance score (0.0-1.0)"
+      
+      - name: term_rank
+        description: "Rank of term importance for this artist (1=most important)"
+        tests:
+          - not_null
+      
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      
+      - name: record_source
+        description: "Source system (lmd_h5)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['lmd_h5']
+    
+    # Composite primary key test
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - artist_hk
+            - term

@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: sat_release
+    description: "Satellite containing release descriptive attributes"
+    
+    columns:
+      - name: release_hk
+        description: "Hash key of the parent release hub"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_release')
+              field: release_hk
+      
+      - name: release
+        description: "Release name/title"
+      
+      - name: release_7digitalid
+        description: "7digital release ID"
+      
+      - name: track_7digitalid
+        description: "7digital track ID"
+      
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      
+      - name: record_source
+        description: "Source system (lmd_h5)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['lmd_h5']

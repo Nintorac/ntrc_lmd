@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: sat_artist
+    description: "Satellite containing artist descriptive attributes"
+    
+    columns:
+      - name: artist_hk
+        description: "Hash key of the parent artist hub"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_artist')
+              field: artist_hk
+      
+      - name: artist_name
+        description: "Artist name"
+      
+      - name: artist_mbid
+        description: "MusicBrainz artist ID"
+      
+      - name: artist_familiarity
+        description: "Artist familiarity score (0.0-1.0)"
+      
+      - name: artist_hotttnesss
+        description: "Artist popularity score (0.0-1.0)"
+      
+      - name: artist_latitude
+        description: "Artist location latitude"
+      
+      - name: artist_longitude
+        description: "Artist location longitude"
+      
+      - name: artist_location
+        description: "Artist location name"
+      
+      - name: artist_7digitalid
+        description: "7digital artist ID"
+      
+      - name: artist_playmeid
+        description: "PlayMe artist ID"
+      
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      
+      - name: record_source
+        description: "Source system (lmd_h5)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['lmd_h5']

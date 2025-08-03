@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: sat_artist_mbtags
+    description: |
+      Multi-active satellite containing MusicBrainz tags for artists.
+      Each artist can have multiple tags with count and ranking information.
+      
+      **Data Handling:** When an artist appears in multiple tracks, we take the first 
+      occurrence ordered by track_id to ensure consistency and avoid duplicates.
+    
+    columns:
+      - name: artist_hk
+        description: "Hash key of the parent artist hub"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_artist')
+              field: artist_hk
+      
+      - name: tag
+        description: "MusicBrainz tag (genre, location, style, etc.)"
+        tests:
+          - not_null
+      
+      - name: tag_count
+        description: "Number of times this tag was applied or its weight in MusicBrainz"
+      
+      - name: tag_rank
+        description: "Rank of tag popularity for this artist (1=most popular)"
+        tests:
+          - not_null
+      
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      
+      - name: record_source
+        description: "Source system (lmd_h5)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['lmd_h5']
+    
+    # Composite primary key test
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - artist_hk
+            - tag

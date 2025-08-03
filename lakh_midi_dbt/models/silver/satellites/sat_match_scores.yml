@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: sat_match_scores
+    description: "Satellite containing match score attributes for track-MIDI relationships"
+    
+    columns:
+      - name: link_track_midi_hk
+        description: "Hash key of the parent track-MIDI link"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('link_track_midi')
+              field: link_track_midi_hk
+      
+      - name: score
+        description: "Matching confidence score (0.0-1.0)"
+        tests:
+          - not_null
+      
+      - name: matching_algorithm
+        description: "Algorithm used for matching"
+      
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      
+      - name: record_source
+        description: "Source system (match_scores)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['match_scores']
