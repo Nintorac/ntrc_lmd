@@ -1,3 +1,11 @@
+{{ config(
+        tags=['incremental'],
+        options={
+            'partition_by': 'partition_col',
+            'OVERWRITE_OR_IGNORE': true
+        }
+    )
+}}
 SELECT
     t.track_hk,
     
@@ -62,7 +70,11 @@ SELECT
     
     -- Audit fields
     current_timestamp as load_date,
-    'lmd_h5' as record_source
+    'lmd_h5' as record_source,
+    
+    -- Operational fields
+    substring(track_hk, 1, 1) partition_col
 
 FROM {{ ref('hub_track') }} t
 JOIN {{ source('bronze_data', 'h5_extract') }} h5 ON t.track_id = h5.track_id
+where partition_col='{{ var("partition_filter", "a") }}'

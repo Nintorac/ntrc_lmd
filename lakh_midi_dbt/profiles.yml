@@ -3,6 +3,7 @@ lakh_midi_dbt:
     dev:
       type: duckdb
       path: dev.duckdb
+      external_root: "data/silver_lakh_midi"
       threads: 1
 
     prod:

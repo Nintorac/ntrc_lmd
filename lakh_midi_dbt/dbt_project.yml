@@ -33,11 +33,10 @@ models:
   lakh_midi_dbt:
     # Config indicated by + and applies to all files under models/example/
     silver:
-      +materialized: table
+      +materialized: external
       hubs:
         +tags: hubs
       links:
         +tags: links
       satellites:
-        +materialized: view
         +tags: satellites
