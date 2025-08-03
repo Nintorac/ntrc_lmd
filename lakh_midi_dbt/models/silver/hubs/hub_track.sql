@@ -27,3 +27,4 @@ SELECT
     current_timestamp as load_date,
     record_source
 FROM track_sources
+ORDER BY track_hk

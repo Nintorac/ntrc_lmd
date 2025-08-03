@@ -100,4 +100,6 @@ dbt run --select tag:incremental --vars '{"partition_filter": "a"}'
 - **Data Vault 2.0** for flexibility and auditability
 - **Source prioritization** when same entities appear in multiple sources
 - **Array-based ranking** preservation from original data ordering
+- **Partitioned processing** by hash key prefix for scalable incremental builds
+- **Deterministic ordering** with ORDER BY clauses on all hash keys for consistent results
 - **Comprehensive documentation** for all models and transformations

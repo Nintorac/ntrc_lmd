@@ -31,3 +31,4 @@ SELECT
     current_timestamp as load_date,
     record_source
 FROM artist_sources
+ORDER BY artist_hk

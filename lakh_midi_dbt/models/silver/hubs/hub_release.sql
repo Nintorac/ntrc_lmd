@@ -12,3 +12,4 @@ SELECT
     current_timestamp as load_date,
     record_source
 FROM release_sources
+ORDER BY release_hk

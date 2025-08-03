@@ -78,3 +78,4 @@ SELECT
 FROM {{ ref('hub_track') }} t
 JOIN {{ source('bronze_data', 'h5_extract') }} h5 ON t.track_id = h5.track_id
 where partition_col='{{ var("partition_filter", "a") }}'
+ORDER BY track_hk

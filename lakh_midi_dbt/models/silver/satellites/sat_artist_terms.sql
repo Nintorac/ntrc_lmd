@@ -25,3 +25,4 @@ artist_terms_data AS (
 )
 
 SELECT * FROM artist_terms_data
+ORDER BY artist_hk

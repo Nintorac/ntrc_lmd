@@ -21,3 +21,4 @@ SELECT
 FROM {{ ref('hub_midi_file') }} m
 JOIN {{ source('bronze_data', 'raw_midi_files') }} mf ON m.midi_md5 = mf.midi_md5
 where partition_col='{{ var("partition_filter", "a") }}'
+ORDER BY midi_hk

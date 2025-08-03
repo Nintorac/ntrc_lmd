@@ -12,3 +12,4 @@ SELECT
     current_timestamp as load_date,
     record_source
 FROM midi_source_sources
+ORDER BY source_hk

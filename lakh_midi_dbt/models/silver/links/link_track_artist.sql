@@ -16,3 +16,4 @@ SELECT
     current_timestamp as load_date,
     record_source
 FROM track_artist_links
+ORDER BY link_track_artist_hk

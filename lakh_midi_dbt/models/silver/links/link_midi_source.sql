@@ -15,3 +15,4 @@ SELECT
     current_timestamp as load_date,
     record_source
 FROM midi_source_links
+ORDER BY link_midi_source_hk

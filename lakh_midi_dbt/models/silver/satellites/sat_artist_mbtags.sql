@@ -23,3 +23,4 @@ artist_mbtags_data AS (
 )
 
 SELECT * FROM artist_mbtags_data
+ORDER BY artist_hk

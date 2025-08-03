@@ -4,3 +4,4 @@ SELECT
     current_timestamp as load_date,
     record_source
 FROM {{ ref('_artist_similar_indexed') }}
+ORDER BY link_artist_similar_hk

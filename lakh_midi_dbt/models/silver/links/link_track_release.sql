@@ -16,3 +16,4 @@ SELECT
     current_timestamp as load_date,
     record_source
 FROM track_release_links
+ORDER BY link_track_release_hk

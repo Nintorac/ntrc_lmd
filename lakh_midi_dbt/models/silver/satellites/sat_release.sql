@@ -10,3 +10,4 @@ SELECT
 
 FROM {{ ref('hub_release') }} r
 JOIN {{ source('bronze_data', 'h5_extract') }} h5 ON r.release_id = h5.metadata.songs.release_7digitalid
+ORDER BY release_hk

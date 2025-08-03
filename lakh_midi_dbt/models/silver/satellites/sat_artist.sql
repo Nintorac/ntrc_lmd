@@ -16,3 +16,4 @@ SELECT
 
 FROM {{ ref('hub_artist') }} a
 JOIN {{ source('bronze_data', 'h5_extract') }} h5 ON a.artist_id = h5.metadata.songs.artist_id
+ORDER BY artist_hk
