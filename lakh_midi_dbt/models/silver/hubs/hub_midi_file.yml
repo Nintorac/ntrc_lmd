@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: hub_midi_file
+    description: "Hub table for MIDI file entities"
+    columns:
+      - name: midi_hk
+        description: "Hash key for MIDI file"
+        tests:
+          - not_null
+          - unique
+      - name: midi_md5
+        description: "MIDI file MD5 hash (business key)"
+        tests:
+          - not_null
+          - unique
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      - name: record_source
+        description: "Source system"
+        tests:
+          - not_null

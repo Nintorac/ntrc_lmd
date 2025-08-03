@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: hub_artist
+    description: "Hub table for artist entities"
+    columns:
+      - name: artist_hk
+        description: "Hash key for artist"
+        tests:
+          - not_null
+          - unique
+      - name: artist_id
+        description: "Echo Nest/MusicBrainz artist ID (business key)"
+        tests:
+          - not_null
+          - unique
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      - name: record_source
+        description: "Source system"
+        tests:
+          - not_null

@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: hub_track
+    description: "Hub table for track entities"
+    columns:
+      - name: track_hk
+        description: "Hash key for track"
+        tests:
+          - not_null
+          - unique
+      - name: track_id
+        description: "MusicBrainz track ID (business key)"
+        tests:
+          - not_null
+          - unique
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      - name: record_source
+        description: "Source system"
+        tests:
+          - not_null

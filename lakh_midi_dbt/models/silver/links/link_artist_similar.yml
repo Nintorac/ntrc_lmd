@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: link_artist_similar
+    description: |
+      Link table for artist similarity relationships.
+      
+      **Data Handling:** When an artist appears in multiple tracks with slightly different 
+      similar_artists arrays (same artists, different ordering), we take the first occurrence 
+      ordered by track_id to ensure consistency and avoid duplicates.
+    
+    columns:
+      - name: link_artist_similar_hk
+        description: "Hash key for artist similarity relationship"
+        tests:
+          - not_null
+          - unique
+      
+      - name: artist_hk
+        description: "Hash key of the primary artist"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_artist')
+              field: artist_hk
+      
+      - name: similar_artist_hk
+        description: "Hash key of the similar artist"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_artist')
+              field: artist_hk
+      
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      
+      - name: record_source
+        description: "Source system (lmd_h5)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['lmd_h5']
