@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: link_midi_source
+    description: "Link table for MIDI file-to-source path relationships"
+    
+    columns:
+      - name: link_midi_source_hk
+        description: "Hash key for MIDI-source relationship"
+        tests:
+          - not_null
+          - unique
+      
+      - name: midi_hk
+        description: "Hash key of the MIDI file"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_midi_file')
+              field: midi_hk
+      
+      - name: source_hk
+        description: "Hash key of the source path"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_midi_source')
+              field: source_hk
+      
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      
+      - name: record_source
+        description: "Source system (md5_to_paths.json)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['md5_to_paths']

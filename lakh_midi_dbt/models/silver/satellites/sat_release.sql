@@ -9,4 +9,4 @@ SELECT
     'lmd_h5' as record_source
 
 FROM {{ ref('hub_release') }} r
-JOIN {{ source('bronze_data', 'h5_extract') }} h5 ON r.release_id = h5.metadata.songs.release
+JOIN {{ source('bronze_data', 'h5_extract') }} h5 ON r.release_id = h5.metadata.songs.release_7digitalid

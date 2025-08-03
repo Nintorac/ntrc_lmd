@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: link_track_midi
+    description: "Link table for track-to-MIDI file relationships based on matching scores"
+    
+    columns:
+      - name: link_track_midi_hk
+        description: "Hash key for track-MIDI relationship"
+        tests:
+          - not_null
+          - unique
+      
+      - name: track_hk
+        description: "Hash key of the track"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_track')
+              field: track_hk
+      
+      - name: midi_hk
+        description: "Hash key of the MIDI file"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_midi_file')
+              field: midi_hk
+      
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      
+      - name: record_source
+        description: "Source system (match_scores)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['match_scores']

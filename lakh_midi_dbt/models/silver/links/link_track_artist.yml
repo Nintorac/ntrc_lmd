@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: link_track_artist
+    description: "Link table for track-to-artist relationships"
+    
+    columns:
+      - name: link_track_artist_hk
+        description: "Hash key for track-artist relationship"
+        tests:
+          - not_null
+          - unique
+      
+      - name: track_hk
+        description: "Hash key of the track"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_track')
+              field: track_hk
+      
+      - name: artist_hk
+        description: "Hash key of the artist"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_artist')
+              field: artist_hk
+      
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      
+      - name: record_source
+        description: "Source system (lmd_h5)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['lmd_h5']

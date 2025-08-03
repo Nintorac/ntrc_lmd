@@ -1,5 +1,5 @@
 WITH midi_source_links AS (
-    SELECT
+    SELECT DISTINCT
         m.midi_hk,
         s.source_hk,
         'md5_to_paths' as record_source

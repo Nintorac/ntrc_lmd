@@ -1,9 +1,9 @@
 WITH release_sources AS (
     SELECT DISTINCT
-        metadata.songs.release as release_id,
+        metadata.songs.release_7digitalid as release_id,
         'lmd_h5' as record_source
     FROM {{ source('bronze_data', 'h5_extract') }}
-    WHERE metadata.songs.release IS NOT NULL
+    WHERE metadata.songs.release_7digitalid IS NOT NULL
 )
 
 SELECT

@@ -5,8 +5,8 @@ WITH track_release_links AS (
         'lmd_h5' as record_source
     FROM {{ ref('hub_track') }} t
     JOIN {{ source('bronze_data', 'h5_extract') }} h5 ON t.track_id = h5.track_id
-    JOIN {{ ref('hub_release') }} r ON r.release_id = h5.metadata.songs.release
-    WHERE h5.metadata.songs.release IS NOT NULL
+    JOIN {{ ref('hub_release') }} r ON r.release_id = h5.metadata.songs.release_7digitalid
+    WHERE h5.metadata.songs.release_7digitalid IS NOT NULL
 )
 
 SELECT

@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: link_track_release
+    description: "Link table for track-to-release relationships"
+    
+    columns:
+      - name: link_track_release_hk
+        description: "Hash key for track-release relationship"
+        tests:
+          - not_null
+          - unique
+      
+      - name: track_hk
+        description: "Hash key of the track"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_track')
+              field: track_hk
+      
+      - name: release_hk
+        description: "Hash key of the release"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hub_release')
+              field: release_hk
+      
+      - name: load_date
+        description: "Load timestamp"
+        tests:
+          - not_null
+      
+      - name: record_source
+        description: "Source system (lmd_h5)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['lmd_h5']

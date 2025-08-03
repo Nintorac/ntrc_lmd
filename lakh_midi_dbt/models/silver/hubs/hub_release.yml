@@ -10,7 +10,7 @@ models:
           - not_null
           - unique
       - name: release_id
-        description: "Release identifier (business key)"
+        description: "Release identifier (7digital release id) (business key)"
         tests:
           - not_null
           - unique

@@ -10,7 +10,7 @@ models:
           - not_null
           - unique
       - name: artist_id
-        description: "Echo Nest/MusicBrainz artist ID (business key)"
+        description: "MusicBrainz artist ID (business key)"
         tests:
           - not_null
           - unique
