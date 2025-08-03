@@ -32,5 +32,12 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   lakh_midi_dbt:
     # Config indicated by + and applies to all files under models/example/
-    example:
-      +materialized: view
+    silver:
+      +materialized: table
+      hubs:
+        +tags: hubs
+      links:
+        +tags: links
+      satellites:
+        +materialized: view
+        +tags: satellites
