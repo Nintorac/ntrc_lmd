@@ -1,7 +1,7 @@
 SELECT
     ltm.link_track_midi_hk,
     
-    ms.match_score as score,
+    LEAST(ms.match_score, 1.0) as score,
     'lmd_matching' as matching_algorithm,
     
     current_timestamp as load_date,

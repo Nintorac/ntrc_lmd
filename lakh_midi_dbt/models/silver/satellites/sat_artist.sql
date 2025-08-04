@@ -4,7 +4,7 @@ SELECT
     h5.metadata.songs.artist_name,
     h5.metadata.songs.artist_mbid,
     h5.metadata.songs.artist_familiarity,
-    h5.metadata.songs.artist_hotttnesss,
+    LEAST(h5.metadata.songs.artist_hotttnesss, 1.0) as artist_hotttnesss,
     h5.metadata.songs.artist_latitude,
     h5.metadata.songs.artist_longitude,
     h5.metadata.songs.artist_location,

@@ -16,20 +16,24 @@ SELECT
     h5.analysis.songs.duration,
     h5.analysis.songs.end_of_fade_in,
     h5.analysis.songs.energy,
-    h5.analysis.songs.key,
+    h5.analysis.songs.key as key_signature_id,
     h5.analysis.songs.key_confidence,
     h5.analysis.songs.loudness,
-    h5.analysis.songs.mode,
+    h5.analysis.songs.mode as mode_id,
     h5.analysis.songs.mode_confidence,
     h5.analysis.songs.start_of_fade_out,
     h5.analysis.songs.tempo,
-    h5.analysis.songs.time_signature,
+    CASE 
+        WHEN h5.analysis.songs.time_signature >= 3 AND h5.analysis.songs.time_signature <= 7 
+        THEN h5.analysis.songs.time_signature 
+        ELSE NULL 
+    END as time_signature,
     h5.analysis.songs.time_signature_confidence,
     
     -- Metadata
     h5.metadata.songs.title,
     h5.metadata.songs.genre,
-    h5.musicbrainz.songs.year,
+    CASE WHEN h5.musicbrainz.songs.year = 0 THEN NULL ELSE h5.musicbrainz.songs.year END as year,
     h5.metadata.songs.analyzer_version,
     h5.metadata.songs.song_id,
     h5.metadata.songs.song_hotttnesss,

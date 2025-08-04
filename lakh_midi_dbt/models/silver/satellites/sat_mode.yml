@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: sat_mode
+    description: "Satellite table containing descriptive attributes for modes"
+    columns:
+      - name: mode_hk
+        description: "Hash key for mode (foreign key to hub_mode)"
+        data_type: varchar
+        constraints:
+          - type: primary_key
+      - name: mode_name
+        description: "Human-readable mode name (minor, major)"
+        data_type: varchar
+        constraints:
+          - type: not_null
+      - name: load_date
+        description: "Date and time when the record was loaded"
+        data_type: timestamp
+        constraints:
+          - type: not_null
+      - name: record_source
+        description: "Source system that provided this record"
+        data_type: varchar
+        constraints:
+          - type: not_null

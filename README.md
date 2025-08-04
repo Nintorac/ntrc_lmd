@@ -27,6 +27,8 @@ Structured using Data Vault methodology with hubs, links, and satellites:
 - **`hub_release`** - 7digital releases  
 - **`hub_midi_file`** - MIDI files by MD5 hash
 - **`hub_midi_source`** - Source file paths
+- **`hub_key_signature`** - Musical key signatures (0-11)
+- **`hub_mode`** - Musical modes (0=minor, 1=major)
 
 #### Links (Relationships)
 - **`link_track_midi`** - Track-to-MIDI matches
@@ -44,6 +46,21 @@ Structured using Data Vault methodology with hubs, links, and satellites:
 - **`sat_artist_similarity`** - Similarity rankings
 - **`sat_artist_terms`** - Echo Nest artist terms (multi-active)
 - **`sat_artist_mbtags`** - MusicBrainz tags (multi-active)
+- **`sat_key_signature`** - Human-readable key signature names
+- **`sat_mode`** - Human-readable mode names
+
+### Gold Layer (Business Intelligence)
+Denormalized, business-friendly models for analytics and reporting:
+
+- **`mart_track_analytics`** - Complete track dimension with audio features, artist info, and human-readable key signatures
+- **`mart_artist_profile`** - Artist profiles with catalog metrics, musical characteristics, and network analysis
+- **`mart_musical_features`** - Statistical summaries of musical features with distribution analysis
+
+#### Key Features
+- **Human-readable keys** - Musical keys displayed as "C", "G", "F#/Gb" instead of integers
+- **Reference data integration** - Joins with seed tables for key signatures and modes
+- **Business-friendly names** - Columns optimized for end-user consumption
+- **Comprehensive metrics** - Statistical aggregations and derived measures
 
 ## Data Quality Features
 
@@ -77,7 +94,9 @@ make data-build-bronze-download  # Download all raw files
 make data-build-bronze-process   # Process raw files into parquet
 make data-build-silver-static    # Build static models (hubs, links)
 make data-build-silver-incrementals # Build satellites for all partitions
-make data-test-silver           # Run tests
+make data-test-silver           # Run silver tests
+make data-build-gold            # Build gold layer models
+make data-test-gold             # Run gold tests
 ```
 
 ### Complete pipelines
@@ -85,6 +104,8 @@ make data-test-silver           # Run tests
 ```bash
 make data-build-bronze-all   # Download + process bronze
 make data-build-silver-all   # Build all silver + test
+make data-build-gold-all     # Build gold + test
+make data-build-all          # Complete pipeline: bronze -> silver -> gold
 ```
 
 ### Partition processing

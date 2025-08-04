@@ -40,6 +40,20 @@ Table hub_midi_source {
   record_source varchar [not null, note: 'md5_to_paths.json']
 }
 
+Table hub_key_signature {
+  key_signature_hk varchar [pk, note: 'Hash key for key signature']
+  key_signature_id integer [not null, unique, note: '0-11 where 0=C (business key)']
+  load_date timestamp [not null, default: `now()`]
+  record_source varchar [not null, note: 'ref_key_signatures']
+}
+
+Table hub_mode {
+  mode_hk varchar [pk, note: 'Hash key for mode']
+  mode_id integer [not null, unique, note: '0=minor, 1=major (business key)']
+  load_date timestamp [not null, default: `now()`]
+  record_source varchar [not null, note: 'ref_modes']
+}
+
 // =============================================================================
 // LINKS - Relationships (Keep DV structure - this is the main value)
 // =============================================================================
@@ -119,10 +133,10 @@ Table sat_track {
   duration float
   end_of_fade_in float
   energy float
-  key integer
+  key_signature_id integer
   key_confidence float
   loudness float
-  mode integer
+  mode_id integer
   mode_confidence float
   start_of_fade_out float
   tempo float
@@ -221,6 +235,24 @@ Table sat_midi_file {
   
   file_content bytea [note: 'Raw MIDI file bytes']
   file_size integer
+  
+  load_date timestamp [not null, default: `now()`]
+  record_source varchar [not null]
+}
+
+Table sat_key_signature {
+  key_signature_hk varchar [pk, ref: > hub_key_signature.key_signature_hk]
+  
+  key_name varchar [not null, note: 'C, C#/Db, D, etc.']
+  
+  load_date timestamp [not null, default: `now()`]
+  record_source varchar [not null]
+}
+
+Table sat_mode {
+  mode_hk varchar [pk, ref: > hub_mode.mode_hk]
+  
+  mode_name varchar [not null, note: 'minor, major']
   
   load_date timestamp [not null, default: `now()`]
   record_source varchar [not null]

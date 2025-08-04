@@ -1,0 +1,126 @@
+version: 2
+
+models:
+  - name: mart_musical_features
+    description: >
+      Aggregated musical characteristics for genre and style analysis.
+      Summary table aggregating audio features by musical dimensions 
+      (key, tempo ranges, time signature, mode) with artist counts, 
+      track counts, and statistical distributions. Enables analysis of 
+      musical trends, genre classification, and feature correlation studies.
+    
+    columns:
+      - name: feature_category
+        description: Category of musical feature being analyzed
+        tests:
+          - not_null
+          - accepted_values:
+              values: 
+                - 'Key Distribution'
+                - 'Mode Distribution' 
+                - 'Time Signature Distribution'
+                - 'Tempo Distribution'
+                - 'Energy Distribution'
+                - 'Danceability Distribution'
+                - 'Decade Trends'
+      
+      - name: feature_value
+        description: Specific value or range within the feature category
+        tests:
+          - not_null
+      
+      - name: track_count
+        description: Number of tracks with this feature value
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 1000000
+      
+      - name: artist_count
+        description: Number of distinct artists with this feature value
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 100000
+      
+      - name: percentage_of_category
+        description: Percentage this value represents within its feature category
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+              inclusive: true
+      
+      # Statistical Aggregates
+      - name: avg_tempo
+        description: Average tempo for tracks with this feature value
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 300
+      
+      - name: avg_energy
+        description: Average energy for tracks with this feature value
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      
+      - name: avg_danceability
+        description: Average danceability for tracks with this feature value
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      
+      - name: avg_loudness
+        description: Average loudness for tracks with this feature value
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: -100
+              max_value: 10
+      
+      - name: avg_duration
+        description: Average duration for tracks with this feature value
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 3600
+      
+      # Temporal Range
+      - name: earliest_year
+        description: Earliest year for tracks with this feature value
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1900
+              max_value: 2100
+              inclusive: true
+      
+      - name: latest_year
+        description: Latest year for tracks with this feature value
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1900
+              max_value: 2100
+              inclusive: true
+      
+      - name: created_at
+        description: Record creation timestamp
+        tests:
+          - not_null
+    
+    tests:
+      - dbt_utils.expression_is_true:
+          expression: "artist_count <= track_count"
+          config:
+            severity: warn
+      
+      - dbt_utils.expression_is_true:
+          expression: "earliest_year <= latest_year"
+          config:
+            severity: error

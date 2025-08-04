@@ -1,0 +1,153 @@
+version: 2
+
+models:
+  - name: mart_track_analytics
+    description: >
+      Complete denormalized track dimension for music analysis and discovery.
+      Combines tracks with all audio features, artist information, release data, 
+      and best MIDI match scores. Includes time-series arrays flattened into 
+      summary statistics for analytical use cases.
+    
+    columns:
+      - name: track_hk
+        description: Hash key for track (primary key)
+        tests:
+          - unique
+          - not_null
+      
+      - name: track_id
+        description: MusicBrainz track ID (business key)
+        tests:
+          - not_null
+      
+      # Audio Features
+      - name: danceability
+        description: Track danceability score (0.0-1.0)
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      
+      - name: energy
+        description: Track energy score (0.0-1.0)
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      
+      - name: tempo
+        description: Track tempo in beats per minute
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 300
+      
+      - name: key_signature
+        description: Musical key signature (C, C#/Db, D, etc.)
+        tests:
+          - accepted_values:
+              values: ['C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab', 'A', 'A#/Bb', 'B']
+      
+      - name: mode
+        description: Musical mode (major, minor)
+        tests:
+          - accepted_values:
+              values: ['major', 'minor']
+      
+      - name: time_signature
+        description: Time signature (beats per measure)
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 3
+              max_value: 7
+      
+      - name: loudness
+        description: Track loudness in decibels
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: -100
+              max_value: 10
+      
+      - name: duration
+        description: Track duration in seconds
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 3600
+      
+      # Track Metadata
+      - name: title
+        description: Track title
+      
+      - name: genre
+        description: Track genre
+      
+      - name: year
+        description: Release year
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1900
+              max_value: 2100
+              inclusive: true
+      
+      - name: song_hotttnesss
+        description: Echo Nest song popularity score (0.0-1.0)
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      
+      # Artist Information
+      - name: artist_name
+        description: Primary artist name
+      
+      - name: artist_familiarity
+        description: Artist familiarity score (0.0-1.0)
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      
+      - name: artist_hotttnesss
+        description: Artist popularity score (0.0-1.0)
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      
+      # MIDI Matching
+      - name: best_midi_match_score
+        description: Best MIDI matching confidence score (0.0-1.0)
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      
+      - name: midi_match_quality
+        description: Categorical MIDI match quality tier
+        tests:
+          - accepted_values:
+              values: ['High', 'Medium', 'Low', 'No Match']
+      
+      # Time Series Summary
+      - name: bars_count
+        description: Number of musical bars detected
+      
+      - name: avg_bars_confidence
+        description: Average confidence score for bar detection
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      
+      - name: created_at
+        description: Record creation timestamp
+        tests:
+          - not_null

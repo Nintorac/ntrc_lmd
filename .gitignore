@@ -18,3 +18,4 @@ lmd_full.tar.gz
 lmd_matched_h5.tar.gz
 match_scores.json
 md5_to_paths.json
+lakh_local.duckdb

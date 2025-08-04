@@ -1,0 +1,151 @@
+version: 2
+
+models:
+  - name: mart_artist_profile
+    description: >
+      Artist-centric analytical view with aggregated metrics.
+      Artist profiles with computed metrics like track count, average audio 
+      features across their catalog, top terms/tags, similarity network degree, 
+      and quality tiers. Supports artist discovery and demographic analysis.
+    
+    columns:
+      - name: artist_hk
+        description: Hash key for artist (primary key)
+        tests:
+          - unique
+          - not_null
+      
+      - name: artist_id
+        description: Echo Nest/MusicBrainz artist ID (business key)
+        tests:
+          - not_null
+      
+      - name: artist_name
+        description: Artist name
+      
+      # Portfolio Metrics
+      - name: total_tracks
+        description: Total number of tracks in dataset
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 10000
+      
+      - name: years_active_count
+        description: Number of distinct years with releases
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+      
+      - name: earliest_year
+        description: Earliest release year in dataset
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1900
+              max_value: 2100
+              inclusive: true
+      
+      - name: latest_year
+        description: Latest release year in dataset
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1900
+              max_value: 2100
+              inclusive: true
+      
+      # Musical Characteristics (Averages)
+      - name: avg_danceability
+        description: Average danceability across artist's tracks
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      
+      - name: avg_energy
+        description: Average energy across artist's tracks
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      
+      - name: avg_tempo
+        description: Average tempo across artist's tracks
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 300
+      
+      - name: most_common_key
+        description: Most frequently used key (0-11)
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 11
+              inclusive: true
+      
+      - name: most_common_mode
+        description: Most frequently used mode (0=minor, 1=major)
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      
+      # Artist Metadata
+      - name: artist_familiarity
+        description: Artist familiarity score (0.0-1.0)
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      
+      - name: artist_hotttnesss
+        description: Artist popularity score (0.0-1.0)
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      
+      # Network Metrics
+      - name: similar_artists_count
+        description: Number of similar artists in network
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1000
+      
+      # MIDI Quality Metrics
+      - name: total_midi_matches
+        description: Total number of MIDI file matches
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 10000
+      
+      - name: high_quality_matches
+        description: Number of high quality MIDI matches (score >= 0.8)
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 10000
+      
+      # Quality Tiers
+      - name: artist_profile_tier
+        description: Artist profile tier based on familiarity and popularity
+        tests:
+          - accepted_values:
+              values: ['High Profile', 'Medium Profile', 'Low Profile', 'Unknown Profile']
+      
+      - name: catalog_size_tier
+        description: Catalog size tier based on track count
+        tests:
+          - accepted_values:
+              values: ['Prolific', 'Active', 'Moderate', 'Limited', 'No Tracks']
+      
+      - name: created_at
+        description: Record creation timestamp
+        tests:
+          - not_null

@@ -41,3 +41,5 @@ models:
         +tags: links
       satellites:
         +tags: satellites
+    gold:
+      +tags: gold

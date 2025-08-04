@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: hub_key_signature
+    description: "Hub table for key signatures (0-11 where 0=C)"
+    columns:
+      - name: key_signature_hk
+        description: "Hash key for key signature"
+        data_type: varchar
+        constraints:
+          - type: primary_key
+      - name: key_signature_id
+        description: "Key signature ID (0-11 where 0=C) - business key"
+        data_type: integer
+        constraints:
+          - type: not_null
+          - type: unique
+      - name: load_date
+        description: "Date and time when the record was loaded"
+        data_type: timestamp
+        constraints:
+          - type: not_null
+      - name: record_source
+        description: "Source system that provided this record"
+        data_type: varchar
+        constraints:
+          - type: not_null

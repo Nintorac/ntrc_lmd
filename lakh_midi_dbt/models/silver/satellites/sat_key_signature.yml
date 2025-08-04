@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: sat_key_signature
+    description: "Satellite table containing descriptive attributes for key signatures"
+    columns:
+      - name: key_signature_hk
+        description: "Hash key for key signature (foreign key to hub_key_signature)"
+        data_type: varchar
+        constraints:
+          - type: primary_key
+      - name: key_name
+        description: "Human-readable key signature name (C, C#/Db, D, etc.)"
+        data_type: varchar
+        constraints:
+          - type: not_null
+      - name: load_date
+        description: "Date and time when the record was loaded"
+        data_type: timestamp
+        constraints:
+          - type: not_null
+      - name: record_source
+        description: "Source system that provided this record"
+        data_type: varchar
+        constraints:
+          - type: not_null

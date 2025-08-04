@@ -80,7 +80,17 @@ data-build-silver-incrementals:
 
 data-test-silver:
 	@echo "Running dbt tests..."
-	dbt test
+	dbt test --select tag:silver
+
+# Build gold layer models
+data-build-gold:
+	@echo "Building gold layer models..."
+	dbt run --select tag:gold
+
+# Test gold layer models
+data-test-gold:
+	@echo "Running gold layer tests..."
+	dbt test --select tag:gold
 
 # Build complete bronze pipeline (download then process)
 data-build-bronze-all: data-build-bronze-download data-build-bronze-process
@@ -88,4 +98,10 @@ data-build-bronze-all: data-build-bronze-download data-build-bronze-process
 # Build complete dataset (static first, then incrementals)
 data-build-silver-all: data-build-silver-static data-build-silver-incrementals data-test-silver
 
-.PHONY: all clean status maps data setup-dirs data-build-bronze-download data-build-bronze-process data-build-bronze-all data-build-silver-static data-build-silver-incrementals data-build-silver-all data-test-silver
+# Build gold layer (build then test)
+data-build-gold-all: data-build-gold data-test-gold
+
+# Build complete pipeline (bronze -> silver -> gold)
+data-build-all: data-build-bronze-all data-build-silver-all data-build-gold-all
+
+.PHONY: all clean status maps data setup-dirs data-build-bronze-download data-build-bronze-process data-build-bronze-all data-build-silver-static data-build-silver-incrementals data-build-silver-all data-test-silver data-build-gold data-test-gold data-build-gold-all data-build-all

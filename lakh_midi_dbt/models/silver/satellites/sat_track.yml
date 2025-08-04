@@ -31,11 +31,11 @@ models:
       - name: tempo
         description: "Track tempo in BPM"
       
-      - name: key
-        description: "Musical key (0-11)"
+      - name: key_signature_id
+        description: "Musical key signature ID (0-11 where 0=C)"
       
-      - name: mode
-        description: "Musical mode (0=minor, 1=major)"
+      - name: mode_id
+        description: "Musical mode ID (0=minor, 1=major)"
       
       - name: energy
         description: "Energy level (0.0-1.0)"
@@ -68,7 +68,11 @@ models:
         description: "Confidence in mode detection (0.0-1.0)"
       
       - name: time_signature
-        description: "Time signature (beats per bar)"
+        description: >
+          Time signature (beats per bar). Represents the numerator of the time signature 
+          (e.g., 4 for 4/4 time, 3 for 3/4 time). Valid range is 3-7 per Echo Nest API 
+          specification. Values outside this range or 0 are converted to NULL.
+          Reference: https://developer.spotify.com/documentation/web-api/reference/get-audio-analysis
       
       - name: time_signature_confidence
         description: "Confidence in time signature detection (0.0-1.0)"

@@ -86,6 +86,28 @@ Table raw_md5_paths {
 }
 
 // =============================================================================
+// REFERENCE DATA - Static lookup tables
+// =============================================================================
+
+Table ref_key_signatures {
+  key_signature_id integer [pk, note: '0-11 where 0=C']
+  key_name varchar [not null, note: 'C, C#/Db, D, etc.']
+  
+  indexes {
+    key_signature_id [name: 'idx_ref_key_signatures_id']
+  }
+}
+
+Table ref_modes {
+  mode_id integer [pk, note: '0=minor, 1=major']
+  mode_name varchar [not null, note: 'minor, major']
+  
+  indexes {
+    mode_id [name: 'idx_ref_modes_id']
+  }
+}
+
+// =============================================================================
 // H5 EXTRACTED DATA - One table per H5 group
 // =============================================================================
 
