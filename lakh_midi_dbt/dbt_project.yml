@@ -22,6 +22,8 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
+on-run-start:
+  - "{% if target.name == 'remote' %}{{ register_upstream_external_models() }}{% endif %}"
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -43,3 +45,4 @@ models:
         +tags: satellites
     gold:
       +tags: gold
+      +post-hook: "COPY (SELECT * FROM {{ this }} USING SAMPLE reservoir(100 ROWS) REPEATABLE (42)) TO 'data/gold_lakh_midi/{{ this.name }}_sample.parquet' (FORMAT 'parquet')"

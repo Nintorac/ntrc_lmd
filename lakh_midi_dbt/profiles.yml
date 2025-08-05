@@ -9,6 +9,9 @@ lakh_midi_dbt:
     remote:
       type: duckdb
       path: data/lakh_remote.duckdb
+      external_root: "hf://datasets/nintorac/ntrc_lakh_midi/silver_lakh_midi"
+      extensions:
+      - httpfs
       threads: 4
 
   target: local

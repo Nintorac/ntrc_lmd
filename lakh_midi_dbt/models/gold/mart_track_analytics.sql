@@ -19,6 +19,7 @@ WITH track_base AS (
         st.tempo,
         st.time_signature,
         st.time_signature_confidence,
+        array_length(st.bars_start) as bars_count,
         
         -- Track metadata
         st.title,
@@ -27,31 +28,6 @@ WITH track_base AS (
         st.analyzer_version,
         st.song_id,
         st.song_hotttnesss,
-        
-        -- Time series summary stats
-        array_length(st.bars_start) as bars_count,
-        array_length(st.beats_start) as beats_count,
-        array_length(st.sections_start) as sections_count,
-        array_length(st.segments_start) as segments_count,
-        array_length(st.tatums_start) as tatums_count,
-        
-        CASE 
-            WHEN st.bars_confidence IS NOT NULL AND array_length(st.bars_confidence) > 0
-            THEN list_avg(st.bars_confidence)
-            ELSE NULL 
-        END as avg_bars_confidence,
-        
-        CASE 
-            WHEN st.beats_confidence IS NOT NULL AND array_length(st.beats_confidence) > 0
-            THEN list_avg(st.beats_confidence)
-            ELSE NULL 
-        END as avg_beats_confidence,
-        
-        CASE 
-            WHEN st.segments_confidence IS NOT NULL AND array_length(st.segments_confidence) > 0
-            THEN list_avg(st.segments_confidence)
-            ELSE NULL 
-        END as avg_segments_confidence,
         
         -- Human-readable key/mode names
         sks.key_name,
@@ -107,6 +83,7 @@ track_midi_match AS (
     SELECT
         tr.*,
         best_match.score as best_midi_match_score,
+        best_match.midi_hk,
         hm.midi_md5 as best_midi_match_md5
     FROM track_release tr
     LEFT JOIN (
@@ -114,10 +91,10 @@ track_midi_match AS (
             ltm.track_hk,
             ltm.midi_hk,
             sms.score,
-            ROW_NUMBER() OVER (PARTITION BY ltm.track_hk ORDER BY sms.score DESC) as rn
         FROM {{ ref('link_track_midi') }} ltm
         JOIN {{ ref('sat_match_scores') }} sms ON ltm.link_track_midi_hk = sms.link_track_midi_hk
-    ) best_match ON tr.track_hk = best_match.track_hk AND best_match.rn = 1
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY ltm.track_hk ORDER BY sms.score DESC)=1
+    ) best_match ON tr.track_hk = best_match.track_hk
     LEFT JOIN {{ ref('hub_midi_file') }} hm ON best_match.midi_hk = hm.midi_hk
 )
 
@@ -143,6 +120,7 @@ SELECT
     genre,
     year,
     song_hotttnesss,
+    bars_count,
     
     -- Artist information
     artist_name,
@@ -161,22 +139,8 @@ SELECT
     -- MIDI matching
     best_midi_match_score,
     best_midi_match_md5,
-    CASE 
-        WHEN best_midi_match_score >= 0.8 THEN 'High'
-        WHEN best_midi_match_score >= 0.6 THEN 'Medium'
-        WHEN best_midi_match_score IS NOT NULL THEN 'Low'
-        ELSE 'No Match'
-    END as midi_match_quality,
-    
-    -- Time series summary statistics
-    bars_count,
-    beats_count,
-    sections_count,
-    segments_count,
-    tatums_count,
-    avg_bars_confidence,
-    avg_beats_confidence,
-    avg_segments_confidence,
+    smf.file_content as best_midi_file_content,
+    smf.file_size as best_midi_file_size,
     
     -- Technical metadata
     audio_md5,
@@ -189,9 +153,9 @@ SELECT
     current_timestamp as created_at
 
 FROM (
-    SELECT *,
-        ROW_NUMBER() OVER (PARTITION BY track_hk ORDER BY best_midi_match_score DESC NULLS LAST, track_id ASC) as final_rn
+    SELECT *
     FROM track_midi_match
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY track_hk ORDER BY best_midi_match_score DESC NULLS LAST, track_id ASC) = 1
 ) deduplicated
-WHERE final_rn = 1
+LEFT JOIN {{ ref('sat_midi_file') }} smf ON deduplicated.midi_hk = smf.midi_hk
 ORDER BY track_hk
