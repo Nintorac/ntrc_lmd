@@ -1,0 +1,21 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+parts:
+  - caption: Guides
+    chapters:
+    - file: quickstart.md
+    - glob: examples/*
+  - caption: Discovery
+    chapters:
+    - file: discovery/raw/raw.md
+      sections:
+      - glob: discovery/raw/*
+    - file: discovery/silver/silver.md
+      sections:
+      - glob: discovery/silver/*
+  - caption: Context
+    chapters:
+    - file: echonest_features_guide.md

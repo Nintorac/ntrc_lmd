@@ -1,26 +1,58 @@
+# %% [markdown]
+"""
+# LMD Matched H5
+
+Quick look into `lmd_matched_h5.tar.gz`
+"""
+
 # %%
+from tempfile import NamedTemporaryFile, TemporaryDirectory
+import warnings
+warnings.filterwarnings('ignore')
+
 import tarfile
 import h5py
 import numpy as np
 import os
+import pandas as pd
+
+from lakh_midi_dataset import project_dir
+
+# %% [markdown]
+"""
+## Archive Contents
+
+First, let's see what's in the tar.gz file
+"""
 
 # %%
-# First, let's see what's in the tar.gz file
-tar_path = "lmd_matched_h5.tar.gz"
+tar_path = project_dir / "lmd_matched_h5.tar.gz"
 print(f"Opening {tar_path}...")
 
-with tarfile.open(tar_path, 'r:gz') as tar:
+with tarfile.open(tar_path, 'r|gz') as tar:
     members = tar.getmembers()
     print(f"Found {len(members)} files in the archive")
 
+# %% [markdown]
+"""
+## File Listing
+
+Let's look at the first few files
+"""
+
 # %%
-# Let's look at the first few files
 print("First 10 files:")
 for i, member in enumerate(members[:10]):
     print(f"  {member.name} ({member.size} bytes)")
 
+# %% [markdown]
+"""
+## File Types
+
+Count different file types in the archive
+"""
+
 # %%
-# Count different file types
 extensions = {}
 for member in members:
     if member.isfile():
@@ -31,30 +63,50 @@ print("File types found:")
 for ext, count in sorted(extensions.items()):
     print(f"  {ext}: {count} files")
 
+# %% [markdown]
+"""
+## H5 File Structure
+
+Let's extract and examine the first H5 file
+"""
+
 # %%
-# Let's extract and examine the first H5 file
 h5_files = [m for m in members if m.name.endswith('.h5')]
 print(f"\nFound {len(h5_files)} H5 files")
+
+tf = TemporaryDirectory()
 
 if h5_files:
     first_h5 = h5_files[0]
     print(f"Examining: {first_h5.name}")
     
     # Extract it temporarily
-    with tarfile.open(tar_path, 'r:gz') as tar:
-        tar.extract(first_h5, path="/tmp/")
+    with tarfile.open(tar_path, 'r|gz') as tar:
+        tar.extract(first_h5, path=tf.name)
     
-    h5_temp_path = f"/tmp/{first_h5.name}"
+    h5_temp_path = f'{tf.name}/{first_h5.name}'
+
+# %% [markdown]
+"""
+## H5 File Contents
+
+Open the H5 file and see what's inside
+"""
 
 # %%
-# Open the H5 file and see what's inside
 with h5py.File(h5_temp_path, 'r') as f:
     print("Keys in the H5 file:")
     for key in f.keys():
         print(f"  {key}: {type(f[key])}")
 
+# %% [markdown]
+"""
+## Dataset Details
+
+Let's explore each dataset/group in detail
+"""
+
 # %%
-# Let's explore each dataset/group
 with h5py.File(h5_temp_path, 'r') as f:
     for key in f.keys():
         item = f[key]
@@ -77,16 +129,17 @@ with h5py.File(h5_temp_path, 'r') as f:
                 else:
                     print(f"  {subkey}: {type(subitem)}")
 
-# %%
-# Clean up
-os.remove(h5_temp_path)
-print("Temporary file cleaned up")
+# %% [markdown]
+"""
+## Multiple File Analysis
+
+Let's check a few more H5 files to see if they have similar structure
+"""
 
 # %%
-# Let's check a few more H5 files to see if they have similar structure
 print("Checking structure of first 3 H5 files...")
 
-with tarfile.open(tar_path, 'r:gz') as tar:
+with tarfile.open(tar_path, 'r|gz') as tar:
     for i, h5_file in enumerate(h5_files[:3]):
         print(f"\n=== File {i+1}: {h5_file.name} ===")
         
@@ -105,18 +158,21 @@ with tarfile.open(tar_path, 'r:gz') as tar:
             if os.path.exists(temp_path):
                 os.remove(temp_path)
 
-# %%
-import pandas as pd
+# %% [markdown]
+"""
+## Songs Data Extraction
+
+Extract songs data from analysis, metadata, and musicbrainz groups for first 10 files
+"""
 
 # %%
-# Extract songs data from analysis, metadata, and musicbrainz groups for first 10 files
 print("Extracting songs data from first 10 H5 files...")
 
 analysis_songs = []
 metadata_songs = []
 musicbrainz_songs = []
 
-with tarfile.open(tar_path, 'r:gz') as tar:
+with tarfile.open(tar_path, 'r|gz') as tar:
     for i, h5_file in enumerate(h5_files[:10]):
         print(f"Processing file {i+1}: {h5_file.name}")
         
@@ -152,7 +208,14 @@ with tarfile.open(tar_path, 'r:gz') as tar:
             if os.path.exists(temp_path):
                 os.remove(temp_path)
 
-# Combine all DataFrames
+# %% [markdown]
+"""
+## Data Summary
+
+Combine all DataFrames and show summary statistics
+"""
+
+# %%
 if analysis_songs:
     analysis_df = pd.concat(analysis_songs, ignore_index=True)
     print(f"\nAnalysis songs DataFrame shape: {analysis_df.shape}")
@@ -160,6 +223,10 @@ if analysis_songs:
 else:
     analysis_df = pd.DataFrame()
 
+#%%
+analysis_df.head()
+
+#%%
 if metadata_songs:
     metadata_df = pd.concat(metadata_songs, ignore_index=True)
     print(f"\nMetadata songs DataFrame shape: {metadata_df.shape}")
@@ -167,11 +234,18 @@ if metadata_songs:
 else:
     metadata_df = pd.DataFrame()
 
+#%%
+metadata_df.head()
+
+#%%
 if musicbrainz_songs:
     musicbrainz_df = pd.concat(musicbrainz_songs, ignore_index=True)
     print(f"\nMusicbrainz songs DataFrame shape: {musicbrainz_df.shape}")
     print("Musicbrainz columns:", list(musicbrainz_df.columns))
 else:
     musicbrainz_df = pd.DataFrame()
+
+#%%
+musicbrainz_df.head()
 
 # %%

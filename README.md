@@ -108,6 +108,14 @@ make data-build-gold-all     # Build gold + test
 make data-build-all          # Complete pipeline: bronze -> silver -> gold
 ```
 
+### Documentation
+
+```bash
+make docs-build    # Build Jupyter Book documentation
+make docs-clean    # Clean documentation build artifacts
+make docs-serve    # Build and serve documentation locally on port 8000
+```
+
 ### Partition processing
 
 Incremental models are partitioned by the first character of hash keys:

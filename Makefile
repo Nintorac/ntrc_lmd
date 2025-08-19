@@ -16,6 +16,7 @@ LMD_FULL = lmd_full.tar.gz
 LMD_MATCHED_H5 = lmd_matched_h5.tar.gz
 MD5_TO_PATHS = md5_to_paths.json
 
+
 # Default target - download all files
 data-build-bronze-download: $(MATCH_SCORES) $(LMD_FULL) $(LMD_MATCHED_H5) $(MD5_TO_PATHS)
 
@@ -104,4 +105,21 @@ data-build-gold-all: data-build-gold data-test-gold
 # Build complete pipeline (bronze -> silver -> gold)
 data-build-all: data-build-bronze-all data-build-silver-all data-build-gold-all
 
-.PHONY: all clean status maps data setup-dirs data-build-bronze-download data-build-bronze-process data-build-bronze-all data-build-silver-static data-build-silver-incrementals data-build-silver-all data-test-silver data-build-gold data-test-gold data-build-gold-all data-build-all
+# Jupyter Book targets
+# Build the Jupyter Book
+docs-build:
+	@echo "Building Jupyter Book..."
+	YDATA_SUPPRESS_BANNER=1 jupyter-book build docs/
+
+# Clean Jupyter Book build artifacts
+docs-clean:
+	@echo "Cleaning Jupyter Book build artifacts..."
+	jupyter-book clean docs/
+
+# Serve the built book locally
+docs-serve: docs-build
+	@echo "Serving Jupyter Book locally..."
+	@echo "Open http://localhost:8000 in your browser"
+	cd docs/_build/html && python -m http.server 8000
+
+.PHONY: all clean status maps data setup-dirs data-build-bronze-download data-build-bronze-process data-build-bronze-all data-build-silver-static data-build-silver-incrementals data-build-silver-all data-test-silver data-build-gold data-test-gold data-build-gold-all data-build-all docs-build docs-clean docs-serve docs-view
