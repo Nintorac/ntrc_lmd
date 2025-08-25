@@ -1,5 +1,13 @@
 # Lakh MIDI Dataset Pipeline
 
+<div align="center">
+
+[![Code](https://img.shields.io/badge/Code-GitHub-blue?logo=github)](https://github.com/Nintorac/ntrc_lmd)
+[![Data](https://img.shields.io/badge/Data-Repository-green?logo=database)](https://huggingface.co/datasets/nintorac/ntrc_lmd_data)
+[![Docs](https://img.shields.io/badge/Docs-Website-orange?logo=book)](https://ntrc-lmd.nintoracaudio.dev)
+
+</div>
+
 A comprehensive data pipeline to transform the Lakh MIDI Dataset from raw `tar.gz` and `h5` files into a structured Data Vault 2.0 model using dbt, dlt, DuckDB, and Parquet files.
 
 ## Overview

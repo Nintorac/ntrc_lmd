@@ -64,7 +64,7 @@ setup-dirs:
 # Run bronze pipeline to process raw data
 data-build-bronze-process: setup-dirs
 	@echo "Running bronze pipeline..."
-	uv run bronze_pipeline.py
+	uv run python -m lakh_midi_dataset.bronze_pipeline
 
 # Build static models (excluding incremental tagged models)
 data-build-silver-static: setup-dirs

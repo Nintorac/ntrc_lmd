@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Bronze Layer Data Pipeline for Lakh MIDI Dataset
 Processes raw source files into parquet format using dlt
