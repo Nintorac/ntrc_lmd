@@ -122,4 +122,41 @@ docs-serve: docs-build
 	@echo "Open http://localhost:8000 in your browser"
 	cd docs/_build/html && python -m http.server 8000
 
-.PHONY: all clean status maps data setup-dirs data-build-bronze-download data-build-bronze-process data-build-bronze-all data-build-silver-static data-build-silver-incrementals data-build-silver-all data-test-silver data-build-gold data-test-gold data-build-gold-all data-build-all docs-build docs-clean docs-serve docs-view
+# Publish docs to netlify branch
+docs-publish:
+	@echo "Publishing documentation to netlify branch..."
+	@# Check if work tree is clean
+	@if [ -n "$$(git status --porcelain)" ]; then \
+		echo "Error: Working tree is not clean. Please commit or stash changes first."; \
+		git status --short; \
+		exit 1; \
+	fi
+	@# Ensure docs are built
+	@if [ ! -d "docs/_build/html" ]; then \
+		echo "Error: docs/_build/html not found. Run 'make docs-build' first."; \
+		exit 1; \
+	fi
+	@# Store current branch
+	$(eval CURRENT_BRANCH := $(shell git branch --show-current))
+	@echo "Current branch: $(CURRENT_BRANCH)"
+	@# Switch to netlify branch (create if doesn't exist)
+	@if git show-ref --verify --quiet refs/heads/netlify; then \
+		git checkout netlify; \
+	else \
+		git checkout --orphan netlify; \
+		git rm -rf .; \
+	fi
+	@# Copy built docs to root
+	@echo "Copying docs/_build/html contents to root..."
+	@cp -r docs/_build/html .
+	@# Commit changes
+	@git add html
+	@git commit -m "Deploy documentation - $$(date '+%Y-%m-%d %H:%M:%S')"
+	@# Push to remote
+	@git push origin netlify
+	@echo "Documentation published to netlify branch"
+	@# Return to original branch
+	@git checkout $(CURRENT_BRANCH)
+	@echo "Returned to $(CURRENT_BRANCH) branch"
+
+.PHONY: all clean status maps data setup-dirs data-build-bronze-download data-build-bronze-process data-build-bronze-all data-build-silver-static data-build-silver-incrementals data-build-silver-all data-test-silver data-build-gold data-test-gold data-build-gold-all data-build-all docs-build docs-clean docs-serve docs-publish
