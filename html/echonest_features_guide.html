@@ -1,0 +1,912 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Echo Nest Time Series Features Guide &#8212; My sample book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'echonest_features_guide';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Tracks" href="discovery/silver/sat_track.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="My sample book - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="My sample book - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Lakh MIDI Dataset Pipeline
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/tokenization.html">🎵 MIDI Tokenization Demo</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Discovery</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="discovery/raw/raw.html">Raw Discovery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="discovery/raw/explore_h5.html">LMD Matched H5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="discovery/raw/explore_lmd_full.html">LMD Full</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="discovery/silver/silver.html">Silver Layer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="discovery/silver/sat_midi_file.html">Midi files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="discovery/silver/sat_track.html">Tracks</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Context</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Echo Nest Time Series Features Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fechonest_features_guide.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/echonest_features_guide.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Echo Nest Time Series Features Guide</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bars-analysis">Bars Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definition">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-details">Technical Details</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#frequency-analysis">Frequency Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#beats-analysis">Beats Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Technical Details</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#musical-significance">Musical Significance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sections-analysis">Sections Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Technical Details</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#musical-applications">Musical Applications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#segments-analysis">Segments Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Technical Details</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-features">Advanced Features</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pitch-chroma-analysis">Pitch Chroma Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-implementation">Technical Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Musical Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties">Properties</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#timbre-analysis">Timbre Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Technical Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dimension-meanings">Dimension Meanings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#applications">Applications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tatums-analysis">Tatums Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Technical Details</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Musical Significance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#relationships">Relationships</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-scoring-system">Confidence Scoring System</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Overview</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretation">Interpretation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Applications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-echo-nest-legacy">The Echo Nest Legacy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-evolution">API Evolution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-impact">Research Impact</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="echo-nest-time-series-features-guide">
+<h1>Echo Nest Time Series Features Guide<a class="headerlink" href="#echo-nest-time-series-features-guide" title="Link to this heading">#</a></h1>
+<p>This guide provides comprehensive explanations of the Echo Nest audio analysis features used in the Lakh MIDI Dataset. The Echo Nest was a music intelligence platform acquired by Spotify in 2014, and its audio analysis technology continues to power Spotify’s Audio Analysis API.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>The Echo Nest audio analysis engine contains a suite of machine listening processes that analyze audio files and output both low-level (such as beat timings) and high-level (such as danceability) musical information. Each temporal feature includes timing information and confidence scores, providing robust musical structure analysis.</p>
+<p><strong>Key Reference</strong>: <a class="reference external" href="https://developer.spotify.com/documentation/web-api/reference/get-audio-analysis">Spotify Audio Analysis API Documentation</a></p>
+</section>
+<hr class="docutils" />
+<section id="bars-analysis">
+<h2>Bars Analysis<a class="headerlink" href="#bars-analysis" title="Link to this heading">#</a></h2>
+<section id="definition">
+<h3>Definition<a class="headerlink" href="#definition" title="Link to this heading">#</a></h3>
+<p><strong>Bars</strong> (also called measures) represent the primary metrical structure of music. A bar is a segment of time defined by a given number of beats.</p>
+</section>
+<section id="technical-details">
+<h3>Technical Details<a class="headerlink" href="#technical-details" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Start Time</strong>: When each bar begins (in seconds)</p></li>
+<li><p><strong>Confidence</strong>: Algorithm certainty in bar detection (0.0 to 1.0)</p></li>
+<li><p><strong>Musical Significance</strong>: Bars define the fundamental rhythmic framework and are essential for understanding song structure and tempo</p></li>
+</ul>
+</section>
+<section id="frequency-analysis">
+<h3>Frequency Analysis<a class="headerlink" href="#frequency-analysis" title="Link to this heading">#</a></h3>
+<p>The time deltas between bars reveal:</p>
+<ul class="simple">
+<li><p><strong>Tempo stability</strong>: Consistent bar lengths indicate steady tempo</p></li>
+<li><p><strong>Tempo changes</strong>: Variations show ritardando, accelerando, or tempo shifts</p></li>
+<li><p><strong>Time signature</strong>: Regular patterns reveal 4/4, 3/4, or other meters</p></li>
+</ul>
+<p><strong>Reference</strong>: <a class="reference external" href="https://www.researchgate.net/publication/271473052_Using_the_Echo_Nest's_automatically_extracted_music_features_for_a_musicological_purpose">Using the Echo Nest’s automatically extracted music features for a musicological purpose</a></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="beats-analysis">
+<h2>Beats Analysis<a class="headerlink" href="#beats-analysis" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h3>Definition<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p><strong>Beats</strong> are the basic time units of music - the regular pulse that listeners tap their feet to. In the Echo Nest system, beats represent the perceived tactus or main pulse of the music.</p>
+</section>
+<section id="id2">
+<h3>Technical Details<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Start Time</strong>: When each beat occurs (in seconds)</p></li>
+<li><p><strong>Confidence</strong>: Reliability of beat detection (0.0 to 1.0)</p></li>
+<li><p><strong>BPM Calculation</strong>: Beats per minute derived from inter-beat intervals (60 / time_delta)</p></li>
+</ul>
+</section>
+<section id="musical-significance">
+<h3>Musical Significance<a class="headerlink" href="#musical-significance" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Tempo Analysis</strong>: Direct measurement of musical speed</p></li>
+<li><p><strong>Rhythmic Feel</strong>: Beat timing variations reveal swing, shuffle, or straight feels</p></li>
+<li><p><strong>Synchronization</strong>: Essential for music apps requiring beat-synchronized effects</p></li>
+</ul>
+<p>Beats are typically multiples of tatums and subdivisions of bars, forming the rhythmic hierarchy.</p>
+<p><strong>Reference</strong>: <a class="reference external" href="http://echonest.github.io/pyechonest/track.html">pyechonest Track Documentation</a></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="sections-analysis">
+<h2>Sections Analysis<a class="headerlink" href="#sections-analysis" title="Link to this heading">#</a></h2>
+<section id="id3">
+<h3>Definition<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p><strong>Sections</strong> identify large-scale structural elements of songs such as verses, choruses, bridges, and instrumental solos. They are defined by significant changes in rhythm, timbre, or harmonic content.</p>
+</section>
+<section id="id4">
+<h3>Technical Details<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Start Time</strong>: When each section begins (in seconds)</p></li>
+<li><p><strong>Confidence</strong>: Algorithm certainty in section boundaries (0.0 to 1.0)</p></li>
+<li><p><strong>Duration Analysis</strong>: Time between sections reveals song structure patterns</p></li>
+</ul>
+</section>
+<section id="musical-applications">
+<h3>Musical Applications<a class="headerlink" href="#musical-applications" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Form Analysis</strong>: Understanding ABABCB (verse-chorus-verse-chorus-bridge-chorus) structures</p></li>
+<li><p><strong>Content Recommendation</strong>: Similar section patterns suggest musical similarity</p></li>
+<li><p><strong>Playlist Creation</strong>: Section timing helps with seamless transitions</p></li>
+</ul>
+<p>Sections represent the highest level of the Echo Nest’s temporal hierarchy and are crucial for understanding musical form.</p>
+<p><strong>Reference</strong>: <a class="reference external" href="https://github.com/algorithmic-music-exploration/amen/issues/79">Echo Nest Converter Features Discussion</a></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="segments-analysis">
+<h2>Segments Analysis<a class="headerlink" href="#segments-analysis" title="Link to this heading">#</a></h2>
+<section id="id5">
+<h3>Definition<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p><strong>Segments</strong> are short-duration sound entities (typically under a second) that are relatively uniform in timbre and harmony. They represent the most granular level of Echo Nest’s temporal analysis.</p>
+</section>
+<section id="id6">
+<h3>Technical Details<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Start Time</strong>: When each segment begins (in seconds)</p></li>
+<li><p><strong>Confidence</strong>: Reliability of segmentation (0.0 to 1.0)</p></li>
+<li><p><strong>Loudness Analysis</strong>: Peak loudness levels within each segment</p></li>
+<li><p><strong>Duration</strong>: Typically 100-500ms, varying with musical complexity</p></li>
+</ul>
+</section>
+<section id="advanced-features">
+<h3>Advanced Features<a class="headerlink" href="#advanced-features" title="Link to this heading">#</a></h3>
+<p>Each segment includes detailed acoustic analysis:</p>
+<ul class="simple">
+<li><p><strong>Pitch Content</strong>: 12-dimensional chroma vectors</p></li>
+<li><p><strong>Timbral Content</strong>: 12-dimensional timbre vectors</p></li>
+<li><p><strong>Loudness Dynamics</strong>: Peak and average loudness measurements</p></li>
+</ul>
+<p>Segments are the foundation for detailed audio analysis and music information retrieval tasks.</p>
+<p><strong>Reference</strong>: <a class="reference external" href="https://developer.spotify.com/documentation/web-api/reference/get-audio-analysis">Spotify Audio Analysis API - Segments</a></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="pitch-chroma-analysis">
+<h2>Pitch Chroma Analysis<a class="headerlink" href="#pitch-chroma-analysis" title="Link to this heading">#</a></h2>
+<section id="id7">
+<h3>Definition<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<p><strong>Pitch chroma vectors</strong> are 12-dimensional representations of harmonic content, corresponding to the 12 pitch classes of Western music: C, C#, D, D#, E, F, F#, G, G#, A, A#, B.</p>
+</section>
+<section id="technical-implementation">
+<h3>Technical Implementation<a class="headerlink" href="#technical-implementation" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Normalization</strong>: Vectors normalized by strongest dimension (0.0 to 1.0)</p></li>
+<li><p><strong>Pitch Class Mapping</strong>: Standard notation where 0=C, 1=C#/Db, 2=D, etc.</p></li>
+<li><p><strong>Harmonic Analysis</strong>: Pure tones show one strong value, complex harmonies show multiple peaks</p></li>
+</ul>
+</section>
+<section id="id8">
+<h3>Musical Applications<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Chord Recognition</strong>: C Major chord shows peaks at C, E, G (indices 0, 4, 7)</p></li>
+<li><p><strong>Key Detection</strong>: Dominant pitch classes reveal tonal centers</p></li>
+<li><p><strong>Harmonic Similarity</strong>: Similar chroma patterns indicate harmonic relationships</p></li>
+</ul>
+</section>
+<section id="properties">
+<h3>Properties<a class="headerlink" href="#properties" title="Link to this heading">#</a></h3>
+<p>Chroma features capture harmonic and melodic characteristics while being robust to changes in timbre and instrumentation. They provide octave-invariant representation of pitch content.</p>
+<p><strong>References</strong>:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Chroma_feature">Chroma Feature - Wikipedia</a></p></li>
+<li><p><a class="reference external" href="https://medium.com/&#64;oluyaled/detecting-musical-key-from-audio-using-chroma-feature-in-python-72850c0ae4b1">Detecting Musical Key from Audio Using Chroma Feature</a></p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="timbre-analysis">
+<h2>Timbre Analysis<a class="headerlink" href="#timbre-analysis" title="Link to this heading">#</a></h2>
+<section id="id9">
+<h3>Definition<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<p><strong>Timbre vectors</strong> are 12-dimensional representations capturing the “tone color” or spectral characteristics of audio segments. These describe perceptual qualities like brightness, roughness, and spectral shape.</p>
+</section>
+<section id="id10">
+<h3>Technical Implementation<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Spectral Analysis</strong>: Derived from spectro-temporal surface analysis</p></li>
+<li><p><strong>Independence</strong>: Calculated independently of pitch and loudness</p></li>
+<li><p><strong>Basis Functions</strong>: Linear combination of 12 basis functions weighted by coefficients</p></li>
+</ul>
+</section>
+<section id="dimension-meanings">
+<h3>Dimension Meanings<a class="headerlink" href="#dimension-meanings" title="Link to this heading">#</a></h3>
+<p>While the exact mapping is proprietary, research indicates:</p>
+<ol class="arabic simple">
+<li><p><strong>First dimension</strong>: Average loudness/energy</p></li>
+<li><p><strong>Second dimension</strong>: Brightness/spectral centroid</p></li>
+<li><p><strong>Third dimension</strong>: Spectral flatness</p></li>
+<li><p><strong>Fourth dimension</strong>: Attack characteristics</p></li>
+<li><p><strong>Remaining dimensions</strong>: Higher-order spectral properties</p></li>
+</ol>
+</section>
+<section id="applications">
+<h3>Applications<a class="headerlink" href="#applications" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Instrument Recognition</strong>: Different instruments have characteristic timbre signatures</p></li>
+<li><p><strong>Sound Quality Analysis</strong>: Timbre vectors capture perceptual audio qualities</p></li>
+<li><p><strong>Music Recommendation</strong>: Similar timbre patterns suggest sonic similarity</p></li>
+</ul>
+<p><strong>References</strong>:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://stackoverflow.com/questions/50928455/echonest-12-dimensional-vector-of-timbre-meaning-of-each-element">EchoNest 12 dimensional vector of timbre - Stack Overflow</a></p></li>
+<li><p><a class="reference external" href="https://www.academia.edu/20406759/Exploration_of_Timbre_features_as_analytic_tools_for_sound_quality_perception">Exploration of Timbre features as analytic tools</a></p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="tatums-analysis">
+<h2>Tatums Analysis<a class="headerlink" href="#tatums-analysis" title="Link to this heading">#</a></h2>
+<section id="id11">
+<h3>Definition<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
+<p><strong>Tatums</strong> represent the smallest regular pulse that listeners intuitively infer from musical timing. Named after jazz pianist Art Tatum, tatums capture micro-rhythmic subdivisions.</p>
+</section>
+<section id="id12">
+<h3>Technical Details<a class="headerlink" href="#id12" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Start Time</strong>: When each tatum occurs (in seconds)</p></li>
+<li><p><strong>Confidence</strong>: Reliability of tatum detection (0.0 to 1.0)</p></li>
+<li><p><strong>Frequency Analysis</strong>: Inter-tatum intervals reveal rhythmic complexity</p></li>
+</ul>
+</section>
+<section id="id13">
+<h3>Musical Significance<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Rhythmic Resolution</strong>: Finest level of rhythmic analysis</p></li>
+<li><p><strong>Groove Analysis</strong>: Tatum timing variations reveal swing, shuffle, or syncopation</p></li>
+<li><p><strong>Performance Style</strong>: Timing deviations indicate human vs. mechanical performance</p></li>
+</ul>
+</section>
+<section id="relationships">
+<h3>Relationships<a class="headerlink" href="#relationships" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Tatums are subdivisions of beats</p></li>
+<li><p>Multiple tatums typically occur per beat</p></li>
+<li><p>Essential for detailed rhythmic and groove analysis</p></li>
+</ul>
+<p><strong>Reference</strong>: <a class="reference external" href="https://musicmachinery.com/tag/the-echo-nest/">Music Machinery - Echo Nest Analysis</a></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="confidence-scoring-system">
+<h2>Confidence Scoring System<a class="headerlink" href="#confidence-scoring-system" title="Link to this heading">#</a></h2>
+<section id="id14">
+<h3>Overview<a class="headerlink" href="#id14" title="Link to this heading">#</a></h3>
+<p>All Echo Nest temporal features include confidence scores ranging from 0.0 to 1.0, indicating algorithm certainty in the analysis.</p>
+</section>
+<section id="interpretation">
+<h3>Interpretation<a class="headerlink" href="#interpretation" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>High Confidence (0.8-1.0)</strong>: Strong, clear musical features</p></li>
+<li><p><strong>Medium Confidence (0.4-0.8)</strong>: Moderate certainty, some ambiguity</p></li>
+<li><p><strong>Low Confidence (0.0-0.4)</strong>: Uncertain detection, possibly due to noise or complexity</p></li>
+</ul>
+</section>
+<section id="id15">
+<h3>Applications<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Quality Control</strong>: Filter unreliable detections</p></li>
+<li><p><strong>Weighted Analysis</strong>: Emphasize high-confidence features</p></li>
+<li><p><strong>Error Detection</strong>: Identify problematic audio regions</p></li>
+</ul>
+<p><strong>Reference</strong>: <a class="reference external" href="http://echonest.github.io/pyechonest/track.html">pyechonest Track Methods Documentation</a></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="historical-context">
+<h2>Historical Context<a class="headerlink" href="#historical-context" title="Link to this heading">#</a></h2>
+<section id="the-echo-nest-legacy">
+<h3>The Echo Nest Legacy<a class="headerlink" href="#the-echo-nest-legacy" title="Link to this heading">#</a></h3>
+<p>The Echo Nest began as a research spin-off from the MIT Media Lab, founded to understand audio and textual content of recorded music. The company was acquired by Spotify in 2014, and its technology was integrated into Spotify’s platform.</p>
+</section>
+<section id="api-evolution">
+<h3>API Evolution<a class="headerlink" href="#api-evolution" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Original Echo Nest API</strong>: Shut down May 31, 2016</p></li>
+<li><p><strong>Migration to Spotify</strong>: Features integrated into Spotify Web API</p></li>
+<li><p><strong>Current Status</strong>: Echo Nest technology powers Spotify’s audio analysis</p></li>
+</ul>
+</section>
+<section id="research-impact">
+<h3>Research Impact<a class="headerlink" href="#research-impact" title="Link to this heading">#</a></h3>
+<p>Echo Nest’s innovations in music information retrieval continue to influence academic research and commercial music applications worldwide.</p>
+<p><strong>References</strong>:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/The_Echo_Nest">The Echo Nest - Wikipedia</a></p></li>
+<li><p><a class="reference external" href="https://medium.com/&#64;FinchMF/praise-questions-and-critique-spotify-api-38e984a4174b">Spotify API Discussion</a></p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>The Echo Nest time series features provide a framework for understanding musical structure at multiple temporal scales. From macro-level sections down to micro-level tatums, these features enable detailed analysis of rhythm, harmony, and timbre in recorded music.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="discovery/silver/sat_track.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tracks</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bars-analysis">Bars Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definition">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-details">Technical Details</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#frequency-analysis">Frequency Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#beats-analysis">Beats Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Technical Details</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#musical-significance">Musical Significance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sections-analysis">Sections Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Technical Details</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#musical-applications">Musical Applications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#segments-analysis">Segments Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Technical Details</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-features">Advanced Features</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pitch-chroma-analysis">Pitch Chroma Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-implementation">Technical Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Musical Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#properties">Properties</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#timbre-analysis">Timbre Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Technical Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dimension-meanings">Dimension Meanings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#applications">Applications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tatums-analysis">Tatums Analysis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Technical Details</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Musical Significance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#relationships">Relationships</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#confidence-scoring-system">Confidence Scoring System</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Overview</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretation">Interpretation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Applications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#historical-context">Historical Context</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-echo-nest-legacy">The Echo Nest Legacy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-evolution">API Evolution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#research-impact">Research Impact</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book Community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
