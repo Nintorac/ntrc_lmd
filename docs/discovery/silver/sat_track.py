@@ -88,7 +88,7 @@ select
     load_date,
     record_source,
     partition_col
-from lakh_remote.sat_track 
+from lakh_remote.ntrc_lmd_silver.sat_track 
 #%% [markdown]
 """
 We display a data profile on the dataset, this contains various format specific analysis and 
@@ -137,7 +137,7 @@ select
     segments_timbre,
     tatums_start,
     tatums_confidence,
-from lakh_remote.sat_track 
+from lakh_remote.ntrc_lmd_silver.sat_track 
 where track_hk in (
     '029f0cec6a749b64f45f27b8a7c56125',
     '02a93439e9627559dbc54f3a66f69c8c',

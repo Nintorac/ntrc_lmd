@@ -16,6 +16,9 @@ parts:
     - file: discovery/silver/silver.md
       sections:
       - glob: discovery/silver/*
+    - file: discovery/gold/gold.md
+      sections:
+      - glob: discovery/gold/*
   - caption: Context
     chapters:
     - file: echonest_features_guide.md

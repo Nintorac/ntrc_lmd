@@ -1,5 +1,13 @@
 # NTRC LMD
 
+<div align="center">
+
+[![Code](https://img.shields.io/badge/Code-GitHub-blue?logo=github)](https://github.com/Nintorac/ntrc_lmd)
+[![Data](https://img.shields.io/badge/Data-Repository-green?logo=database)](https://huggingface.co/datasets/nintorac/ntrc_lmd_data)
+[![Docs](https://img.shields.io/badge/Docs-Website-orange?logo=book)](https://ntrc-lmd.nintoracaudio.dev)
+
+</div>
+
 A distribution of Colin Raffel's Lakh Midi Datast using modern data tooling and designed to accelerate getting started working with this dataset. Find the data at [huggingface.co:datasets/nintorac/ntrc_lmd_data](https://huggingface.co/datasets/nintorac/ntrc_lmd_data)
 
 ## What Is This?

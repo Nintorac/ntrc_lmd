@@ -5,10 +5,12 @@ lakh_midi_dbt:
       path: data/lakh_local.duckdb
       external_root: "data/silver_lakh_midi"
       threads: 1
+      schema: ntrc_lmd
 
     remote:
       type: duckdb
       path: data/lakh_remote.duckdb
+      schema: ntrc_lmd
       external_root: "hf://datasets/nintorac/ntrc_lakh_midi/silver_lakh_midi"
       extensions:
       - httpfs

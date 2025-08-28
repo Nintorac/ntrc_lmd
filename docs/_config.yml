@@ -28,6 +28,8 @@ sphinx:
   config:
     nb_custom_formats:
       .py: ["jupytext.reads", {"fmt": "py:percent"}]
+    html_static_path:
+      - _static
 
 # Information about where the book exists on the web
 repository:

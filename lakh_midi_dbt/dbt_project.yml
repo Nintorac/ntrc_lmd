@@ -37,6 +37,7 @@ models:
     silver:
       +materialized: external
       +tags: silver
+      +schema: silver
       hubs:
         +tags: hubs
       links:
@@ -44,5 +45,6 @@ models:
       satellites:
         +tags: satellites
     gold:
+      +schema: gold
       +tags: gold
       +post-hook: "COPY (SELECT * FROM {{ this }} USING SAMPLE reservoir(100 ROWS) REPEATABLE (42)) TO 'data/gold_lakh_midi/{{ this.name }}_sample.parquet' (FORMAT 'parquet')"

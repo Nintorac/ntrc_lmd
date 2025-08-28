@@ -29,12 +29,12 @@ For users who want full local access to the dataset and plan to do extensive ana
    import duckdb
    
    # Connect to local DuckDB file
-   conn = duckdb.connect('lakh_remote.duckdb')
+   conn = duckdb.connect('lakh_local.duckdb')
    
    # Query the data
    result = conn.execute("""
        SELECT COUNT(*) as track_count 
-       FROM sat_track
+       FROM ntrc_lmd_silver.sat_track
    """).fetchall()
    
    print(f"Total tracks: {result[0][0]}")
@@ -73,7 +73,7 @@ For users who want quick access without downloading the full dataset.
    # Sample the artist profile mart table
    %%sql
    CREATE TABLE my_artist_sample AS 
-   SELECT * FROM lakh_remote.mart_artist_profile 
+   SELECT * FROM lakh_remote.ntrc_lmd_gold.mart_artist_profile 
    WHERE artist_profile_tier = 'High Profile' 
    LIMIT 100;
    
@@ -99,7 +99,7 @@ For users who want quick access without downloading the full dataset.
    # Create local sample from gold layer (recommended pattern)
    conn.execute("""
        CREATE TABLE my_artist_sample AS 
-       SELECT * FROM lakh_remote.mart_artist_profile 
+       SELECT * FROM lakh_remote.ntrc_lmd_gold.mart_artist_profile 
        WHERE artist_profile_tier = 'High Profile' 
        LIMIT 100
    """)
@@ -162,14 +162,14 @@ For users who want to work with a subset of data locally after initial remote ex
    # Export artist profile data (start with gold layer)
    conn.execute("""
        CREATE TABLE local_db.artist_profiles AS 
-       SELECT * FROM lakh_remote.mart_artist_profile 
+       SELECT * FROM lakh_remote.ntrc_lmd_gold.mart_artist_profile 
        WHERE artist_profile_tier = 'High Profile'
    """)
    
    # Export track analytics
    conn.execute("""
        CREATE TABLE local_db.track_analytics AS 
-       SELECT * FROM lakh_remote.mart_track_analytics
+       SELECT * FROM lakh_remote.ntrc_lmd_gold.mart_track_analytics
        WHERE year >= 2000
    """)
    
@@ -217,8 +217,8 @@ For users who want to work with a subset of data locally after initial remote ex
            t.loudness,
            m.file_size,
            m.num_tracks as midi_track_count
-       FROM remote.sat_track t
-       JOIN remote.sat_midi_file m ON t.track_hk = m.track_hk
+       FROM remote.ntrc_lmd_gold.sat_track t
+       JOIN remote.ntrc_lmd_gold.sat_midi_file m ON t.track_hk = m.track_hk
        WHERE t.year IS NOT NULL 
        AND t.tempo IS NOT NULL
    """)
@@ -258,7 +258,7 @@ Database IDEs provide a user-friendly graphical interface for working with the L
 ```sql
 -- Sample the artist profile mart table (recommended pattern)
 CREATE TABLE my_artist_sample AS 
-SELECT * FROM lakh_remote.mart_artist_profile 
+SELECT * FROM lakh_remote.ntrc_lmd_gold.mart_artist_profile 
 WHERE artist_profile_tier = 'High Profile' 
 LIMIT 100;
 
@@ -300,8 +300,8 @@ SELECT
     t.loudness,
     m.file_size,
     m.num_tracks as midi_track_count
-FROM lakh_remote.sat_track t
-JOIN lakh_remote.sat_midi_file m ON t.track_hk = m.track_hk
+FROM lakh_remote.ntrc_lmd_gold.sat_track t
+JOIN lakh_remote.ntrc_lmd_gold.sat_midi_file m ON t.track_hk = m.track_hk
 WHERE t.year IS NOT NULL 
 AND t.tempo IS NOT NULL
 LIMIT 10000; -- Be careful with large joins
@@ -335,9 +335,9 @@ Always create local tables from remote queries before doing analysis. Direct que
 
 After choosing your setup approach:
 
-1. **Explore the data structure**: Check out the [data discovery notebooks](discovery/silver/silver.md)
+1. **Explore the data structure**: Check out the [data discovery notebooks](discovery/silver/silver.py)
 2. **Learn about features**: Read the [Echonest Features Guide](echonest_features_guide.md) 
-3. **See examples**: Browse the [examples directory](examples/) for common analysis patterns
+3. **See examples**: Browse the `examples` in the sidebar for common analysis patterns
 4. **Check the API**: Review the full Python API documentation
 
 ## Common Issues and Solutions
@@ -360,7 +360,7 @@ SELECT
    --bars_confidence,
    --beats_start,
    --beats_confidence,
-FROM lakh_remote.sat_track
+FROM lakh_remote.ntrc_lmd_silver.sat_track
 """)
 ```
 

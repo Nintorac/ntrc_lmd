@@ -20,3 +20,5 @@ md5_to_paths.json
 lakh_local.duckdb
 
 _build
+
+**/_static/audio/*

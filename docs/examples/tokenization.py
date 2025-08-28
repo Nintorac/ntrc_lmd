@@ -1,6 +1,6 @@
 # %% [markdown]
 """
-# 🎵 MIDI Tokenization Demo
+# MIDI Tokenization Demo
 
 This notebook demonstrates how to:
 1. Connect to the NTRC Lakh MIDI dataset 
@@ -13,6 +13,7 @@ Based on the symbolic_example.md and ntrc_dataset.md documentation.
 # %%
 import duckdb
 import pandas as pd
+import lakh_midi_dataset
 from pathlib import Path
 import tempfile
 from symbolic_music.aria import MidiDict, AbsTokenizer, normalize_midi_dict
@@ -28,43 +29,21 @@ We'll attach to the remote database hosted on Hugging Face and query
 the MIDI files with their metadata.
 """
 # %%
-# Initialize DuckDB connection
-conn = duckdb.connect()
-
-# Attach the remote database
-print("📡 Connecting to remote NTRC Lakh MIDI database...")
-conn.execute("ATTACH 'hf://datasets/nintorac/ntrc_lakh_midi/lakh_remote.duckdb' AS lakh_remote;")
-print("✅ Connected successfully!")
+%%sql
+-- Attach the remote database
+ATTACH 'hf://datasets/nintorac/ntrc_lakh_midi/lakh_remote.duckdb' AS lakh_remote;
+USE lakh_remote.ntrc_lmd_silver
 
 # %% [markdown]
 """
-## Step 2: Explore the Available Tables
-
-Let's see what tables are available in the remote database.
-"""
-# %%
-# List all tables in the remote database
-tables_query = """
-SHOW ALL TABLES
-"""
-
-tables_df = conn.execute(tables_query).df()
-print("🗂️  Available tables in the database:")
-print(tables_df.to_string(index=False))
-
-# %% [markdown]
-"""
-## Step 3: Query Random MIDI Files with Metadata
+## Step 2: Query Random MIDI Files with Metadata
 
 We'll query a bunch of midis for which we have matched metadata including
 artist info, tempo, key signature, etc.
 """
 
 #%%
-print("\n🎲 Querying 50 random MIDI files...")
-
-# Query to get random MIDI files with rich metadata
-midi_query = """
+%%sql -o midi_df
 WITH random_midis AS (
     SELECT 
         mf.midi_md5,
@@ -80,31 +59,29 @@ WITH random_midis AS (
         st.title,
         st.year,
         st.tempo
-    FROM (from lakh_remote.hub_midi_file limit 500) mf
-    INNER JOIN lakh_remote.sat_midi_file smf ON mf.midi_hk = smf.midi_hk
+    FROM (from hub_midi_file limit 500) mf
+    INNER JOIN sat_midi_file smf ON mf.midi_hk = smf.midi_hk
     -- Join to tracks via link table
-    LEFT JOIN lakh_remote.link_track_midi ltm ON mf.midi_hk = ltm.midi_hk  
-    LEFT JOIN lakh_remote.hub_track ht ON ltm.track_hk = ht.track_hk
-    LEFT JOIN lakh_remote.sat_track st ON ht.track_hk = st.track_hk
+    LEFT JOIN link_track_midi ltm ON mf.midi_hk = ltm.midi_hk  
+    LEFT JOIN hub_track ht ON ltm.track_hk = ht.track_hk
+    LEFT JOIN sat_track st ON ht.track_hk = st.track_hk
     -- Join to artists via link table
-    LEFT JOIN lakh_remote.link_track_artist lta ON ht.track_hk = lta.track_hk
-    LEFT JOIN lakh_remote.hub_artist ha ON lta.artist_hk = ha.artist_hk  
-    LEFT JOIN lakh_remote.sat_artist sa ON ha.artist_hk = sa.artist_hk
+    LEFT JOIN link_track_artist lta ON ht.track_hk = lta.track_hk
+    LEFT JOIN hub_artist ha ON lta.artist_hk = ha.artist_hk  
+    LEFT JOIN sat_artist sa ON ha.artist_hk = sa.artist_hk
     WHERE smf.file_content IS NOT NULL
     AND smf.file_size > 1000  -- Filter out very small files
     qualify row_number() over (partition by mf.midi_hk)=1
 )
 SELECT * FROM random_midis
 where artist_name is not null;
-"""
-
-midi_df = conn.execute(midi_query).df()
+#%%
 print(f"✅ Retrieved {len(midi_df)} MIDI files")
 print(f"📊 Total file size: {midi_df['file_size'].sum() / 1024 / 1024:.1f} MB")
 
 # %% [markdown]
 """
-## Step 4: Display Sample of Retrieved Data
+## Step 3: Display Sample of Retrieved Data
 
 Let's look at what we got - showing key metadata for our MIDI files.
 """
@@ -121,7 +98,7 @@ print(display_df.to_string(index=False))
 
 # %% [markdown]
 """
-## Step 5: Initialize the ARIA AbsTokenizer
+## Step 4: Initialize the ARIA AbsTokenizer
 
 Following the symbolic_example.md documentation to set up tokenization.
 """
@@ -139,7 +116,7 @@ print(f"   - Max duration: {tokenizer.max_dur_ms}ms")
 
 # %% [markdown]
 """
-## Step 6: Process and Tokenize MIDI Files
+## Step 5: Process and Tokenize MIDI Files
 
 Now we'll process each MIDI file:
 1. Load MIDI data from bytes
@@ -217,7 +194,7 @@ print(f"Errors:\n {err_out}")
 
 # %% [markdown]
 """
-## Step 7: Analyze Tokenization Results
+## Step 6: Analyze Tokenization Results
 
 Let's examine the tokenized sequences and their characteristics.
 """
@@ -254,7 +231,7 @@ if tokenization_results:
 
 # %% [markdown]
 """
-## Step 8: Vocabulary Analysis
+## Step 7: Vocabulary Analysis
 
 Let's examine the tokenizer vocabulary and token usage.
 """
@@ -283,7 +260,7 @@ if tokenization_results:
 
 # %% [markdown]
 """
-## Step 9: Export Results for Further Analysis
+## Step 8: Export Results for Further Analysis
 
 Save our results to CSV for further analysis.
 """
@@ -331,8 +308,5 @@ Next steps could include:
 """
 #%%
 print("\n🎵✨ MIDI Tokenization Demo Complete! ✨🎵")
-
-# Close database connection
-conn.close()
 
 # %%
